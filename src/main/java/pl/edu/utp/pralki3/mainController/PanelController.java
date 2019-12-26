@@ -22,6 +22,6 @@ public class PanelController {
         String username= UserUtilities.getLoggedUser();
         User user=userService.findUserByEmail(username);
         model.addAttribute("user",user);
-        return "panel";
+        return "panel_new";
     }
 }
