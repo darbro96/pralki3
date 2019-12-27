@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
+@Secured(value = { "ROLE_ADMIN" })
 public class AdminPagesController {
     @Autowired
     private UserService userService;
