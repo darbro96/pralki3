@@ -1,7 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s"  uri="http://www.springframework.org/tags"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -24,12 +24,15 @@
 
 
         <div class="btn-group ml-auto">
-            <button type="button" class="btn btn-primary">Pralka nr 12</button>
-            <button type="button" class="btn btn-primary">Pralka nr 13</button>
-            <button type="button" class="btn btn-primary">Pralka nr 14</button>
-            <button type="button" class="btn btn-primary">Pralka nr 15</button>
-            <button type="button" class="btn btn-primary">Pralka nr 16</button>
-            <button type="button" class="btn btn-primary">Pralka nr 17</button>
+                <%--            <button type="button" class="btn btn-primary">Pralka nr 12</button>--%>
+                <%--            <button type="button" class="btn btn-primary">Pralka nr 13</button>--%>
+                <%--            <button type="button" class="btn btn-primary">Pralka nr 14</button>--%>
+                <%--            <button type="button" class="btn btn-primary">Pralka nr 15</button>--%>
+                <%--            <button type="button" class="btn btn-primary">Pralka nr 16</button>--%>
+                <%--            <button type="button" class="btn btn-primary">Pralka nr 17</button>--%>
+            <c:forEach var="w" items="${washers}">
+                <button type="button" class="btn btn-primary">Pralka nr <c:out value="${w.numberWasher}" /> (pralnia <c:out value="${w.laundry.numberLaundry}" /> )</button>
+            </c:forEach>
         </div>
     </div>
 </sec:authorize>
