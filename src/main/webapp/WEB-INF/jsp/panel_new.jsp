@@ -39,6 +39,8 @@
     <p><a href="${pageContext.request.contextPath}/register">Dodaj użytkownika</a></p>
     <p><a href="${pageContext.request.contextPath}/users/1">Lista użytkowników</a></p>
     <p><a href="${pageContext.request.contextPath}/adddormitory">Dodaj akademik</a></p>
+    <p><a href="${pageContext.request.contextPath}/addlaundry">Dodaj pralnię</a></p>
+    <p><a href="${pageContext.request.contextPath}/addwasher">Dodaj pralkę</a></p>
 </sec:authorize>
 </body>
 </html>

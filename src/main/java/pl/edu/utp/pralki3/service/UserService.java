@@ -49,13 +49,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Page<User> findAll(Pageable pageable)
-    {
+    public Page<User> findAll(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
-    public Page<User> findAll(Pageable pageable, String word)
-    {
+    public Page<User> findAll(Pageable pageable, String word) {
         return userRepository.findAll(pageable, word);
     }
 }

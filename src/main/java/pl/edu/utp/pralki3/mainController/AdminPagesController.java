@@ -10,14 +10,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.edu.utp.pralki3.entity.Dormitory;
+import pl.edu.utp.pralki3.entity.Laundry;
 import pl.edu.utp.pralki3.entity.User;
+import pl.edu.utp.pralki3.entity.Washer;
 import pl.edu.utp.pralki3.service.DormitoryService;
+import pl.edu.utp.pralki3.service.LaundryService;
 import pl.edu.utp.pralki3.service.UserService;
+import pl.edu.utp.pralki3.service.WasherService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdminPagesController {
@@ -26,6 +31,12 @@ public class AdminPagesController {
 
     @Autowired
     private DormitoryService dormitoryService;
+
+    @Autowired
+    private LaundryService laundryService;
+
+    @Autowired
+    private WasherService washerService;
 
     private static final int ELEMENTS = 5;
 
@@ -101,5 +112,78 @@ public class AdminPagesController {
             user.setNrRoli(user.getRoles().iterator().next().getIdRole());
         }
         return pages;
+    }
+
+    @GET
+    @RequestMapping(value = "/addlaundry")
+    public String showAddLaundryForm(Model model) {
+        Laundry laundry = new Laundry();
+        List<Dormitory> dormitories = dormitoryService.findAll();
+        model.addAttribute("laundry", laundry);
+        model.addAttribute("dorms", dormitories);
+        return "addLaundry";
+    }
+
+    @POST
+    @RequestMapping(value = "/addlaundryaction")
+    public String addNewLaundry(Laundry laundry, BindingResult bindingResult, Model model, Locale locale) {
+        String returnPage = null;
+        Laundry laundryExists = null;
+        laundryExists = laundryService.getLaundryByNumber(laundry.getNumberLaundry());
+        if (laundryExists != null) {
+            if (laundryExists.getDormitory().getIdDormitory() == laundry.getDormitory().getIdDormitory())
+                bindingResult.rejectValue("name", "Pralnia już istnieje!");
+        }
+        if (bindingResult.hasErrors()) {
+            returnPage = "addLaundry";
+        } else {
+            laundryService.saveLaundry(laundry);
+            model.addAttribute("message", "Dodano nową pralnię");
+            model.addAttribute("laundry", new Laundry());
+            returnPage = "addLaundry";
+        }
+        return returnPage;
+    }
+
+    @GET
+    @RequestMapping(value = "/addwasher")
+    public String showAddWasherForm(Model model) {
+        Washer washer = new Washer();
+        List<Laundry> laundries = laundryService.findAll();
+        model.addAttribute("washer", washer);
+        model.addAttribute("laundries", laundries);
+        return "addWasher";
+    }
+
+    @POST
+    @RequestMapping(value = "/addwasheraction")
+    public String addNewWasher(Washer washer, BindingResult bindingResult, Model model, Locale locale) {
+        String returnPage = null;
+//        Washer washerExists = null;
+//        try {
+//            washerExists = washerService.get(washer.getIdOfLaundry());
+//        } catch (Exception ex) {
+//            System.out.println(ex.toString());
+//        }
+//        if (washerExists != null) {
+//            if (washerExists.getNumberWasher() == washer.getNumberWasher())
+//                bindingResult.rejectValue("name", "Pralka o takim numerze w danej pralni już istnieje!");
+//        }
+        List<Washer> washers = washerService.findAll();
+        for (Washer w : washers) {
+            if (w.getLaundry().getIdLaundry() == washer.getIdOfLaundry() && w.getNumberWasher() == washer.getNumberWasher()) {
+                bindingResult.rejectValue("name", "Pralka o takim numerze w danej pralni już istnieje!");
+                break;
+            }
+        }
+        if (bindingResult.hasErrors()) {
+            returnPage = "addWasher";
+        } else {
+            washerService.saveWasher(washer);
+            model.addAttribute("message", "Dodano nową pralkę");
+            model.addAttribute("washer", new Washer());
+            returnPage = "addWasher";
+        }
+        return returnPage;
     }
 }
