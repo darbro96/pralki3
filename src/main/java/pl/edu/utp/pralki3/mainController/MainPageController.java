@@ -4,6 +4,7 @@ import javax.ws.rs.GET;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.edu.utp.pralki3.model.UserUtilities;
 
 @Controller
 public class MainPageController {
@@ -11,7 +12,11 @@ public class MainPageController {
     @GET
     @RequestMapping(value = {"/", "/index"})
     public String showMainPage() {
-        return "login";
+        String username = UserUtilities.getLoggedUser();
+        if (username == null)
+            return "login";
+        else
+            return "panel_new";
     }
 
 }

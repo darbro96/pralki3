@@ -12,10 +12,7 @@
                     <a class="nav-link" href="/panel">Start</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Historia rezerwacji</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Historia rezerwacji</a>
+                    <a class="nav-link" href="/reservations">Twoje rezerwacje</a>
                 </li>
             </ul>
 

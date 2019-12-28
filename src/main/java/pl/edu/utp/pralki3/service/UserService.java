@@ -56,4 +56,8 @@ public class UserService {
     public Page<User> findAll(Pageable pageable, String word) {
         return userRepository.findAll(pageable, word);
     }
+
+    public User get(int id) {
+        return userRepository.getOne(id);
+    }
 }

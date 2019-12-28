@@ -20,6 +20,7 @@
     <div class="container-fluid" style="text-align: center;"><br>
 
         <h1>Strona główna</h1>
+        <p><button type="button" class="btn btn-primary" onclick="window.location.href='${pageContext.request.contextPath}/bookwasher'">Zarezerwuj pralkę</button></p>
         <p>Podgląd aktualnego rozkładu rezerwacji</p>
 
 

@@ -2,6 +2,7 @@ package pl.edu.utp.pralki3.mainController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Controller
+@Secured(value = { "ROLE_ADMIN" })
 public class RegisterController {
     @Autowired
     private UserService userService;

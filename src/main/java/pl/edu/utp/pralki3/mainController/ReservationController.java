@@ -1,0 +1,118 @@
+package pl.edu.utp.pralki3.mainController;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import pl.edu.utp.pralki3.entity.Reservation;
+import pl.edu.utp.pralki3.entity.User;
+import pl.edu.utp.pralki3.entity.Washer;
+import pl.edu.utp.pralki3.model.UserUtilities;
+import pl.edu.utp.pralki3.service.ReservationService;
+import pl.edu.utp.pralki3.service.UserService;
+import pl.edu.utp.pralki3.service.WasherService;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Locale;
+
+@Controller
+public class ReservationController {
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private WasherService washerService;
+
+    @Autowired
+    private ReservationService reservationService;
+
+    @GET
+    @RequestMapping("/bookwasher")
+    public String showBookForm(Model model) {
+        User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("user", user);
+        List<Washer> washers = washerService.getWashersToUser(user);
+        model.addAttribute("washers", washers);
+        LocalDateTime today = LocalDateTime.now();
+        model.addAttribute("today", dateTimeToString(today));
+        LocalDateTime max = today.plusDays(8);
+        model.addAttribute("max", dateTimeToString(max));
+        Reservation reservation = new Reservation();
+        model.addAttribute("reservation", reservation);
+        return "bookWasher";
+    }
+
+    private String dateTimeToString(LocalDateTime dateTime) {
+        String m, d;
+        if (dateTime.getMonthValue() < 10) {
+            m = "0" + dateTime.getMonthValue();
+        } else {
+            m = String.valueOf(dateTime.getMonthValue());
+        }
+        if (dateTime.getDayOfMonth() < 10) {
+            d = "0" + dateTime.getDayOfMonth();
+        } else {
+            d = String.valueOf(dateTime.getDayOfMonth());
+        }
+        return dateTime.getYear() + "-" + m + "-" + d;
+    }
+
+    @POST
+    @RequestMapping("/bookwasheraction")
+    public String bookWasher(Reservation reservation, BindingResult bindingResult, Model model, Locale locale) {
+        User user = userService.findUserByEmail(reservation.getUsername());
+        reservation.setUser(user);
+        Washer washer = washerService.get(Integer.parseInt(reservation.getWasherId()));
+        reservation.setWasher(washer);
+        reservation.setStart(LocalDateTime.parse(reservation.getDateStart() + "T" + reservation.getTimeStart()));
+        reservation.setStop(reservation.getStart().plusHours(Long.parseLong(reservation.getDuration())));
+
+        System.out.println("\n\n\n\n" + reservation.toString() + "\n\n\n\n");
+
+        if (!reservationService.checkReservation(reservation)) {
+            bindingResult.rejectValue("start", "Rezerwacja niemożliwa. Wybierz inny termin lub pralkę");
+            model.addAttribute("message", "Rezerwacja niemożliwa. Wybierz inny termin lub pralkę");
+        }
+
+        if (!reservationService.checkUser(user)) {
+            bindingResult.rejectValue("start", "Osiągnąłeś limit rezerwacji na wskazany dzień!");
+            model.addAttribute("message", "Osiągnąłeś limit rezerwacji na wskazany dzień!");
+        }
+
+
+        if (bindingResult.hasErrors()) {
+            user = userService.findUserByEmail(UserUtilities.getLoggedUser());
+            model.addAttribute("user", user);
+            List<Washer> washers = washerService.getWashersToUser(user);
+            model.addAttribute("washers", washers);
+            LocalDateTime today = LocalDateTime.now();
+            model.addAttribute("today", dateTimeToString(today));
+            LocalDateTime max = today.plusDays(8);
+            model.addAttribute("max", dateTimeToString(max));
+            reservation = new Reservation();
+            model.addAttribute("reservation", reservation);
+            return "bookWasher";
+        } else {
+            reservationService.saveReservation(reservation);
+            user = userService.findUserByEmail(UserUtilities.getLoggedUser());
+            model.addAttribute("user", user);
+            List<Reservation> reservations = reservationService.findByUserTodayOrLater(user);
+            model.addAttribute("reservations", reservations);
+            return "reservations";
+        }
+    }
+
+    @GET
+    @RequestMapping("/reservations")
+    public String showUserReservations(Model model) {
+        User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("user", user);
+        List<Reservation> reservations = reservationService.findByUserTodayOrLater(user);
+        model.addAttribute("reservations", reservations);
+        return "reservations";
+    }
+}
