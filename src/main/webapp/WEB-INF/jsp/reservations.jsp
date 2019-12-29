@@ -19,7 +19,8 @@
 <c:forEach var="r" items="${reservations}">
     ------------------------------------
     <p>Rezerwacja ${r.idReservation}<br>Pralka: ${r.washer.numberWasher} (pralnia ${r.washer.laundry.numberLaundry})
-        <br>Godzina rozpoczęcia: ${r.start}<br>Godzina zakończenia: ${r.stop}</p>
+        <br>Godzina rozpoczęcia: ${r.start}<br>Godzina zakończenia: ${r.stop}
+    <br><button onclick="window.location.href='${pageContext.request.contextPath}/reservations?cancel=${r.idReservation}'">Zrezygnuj</button></p>
 </c:forEach>
 </body>
 </html>

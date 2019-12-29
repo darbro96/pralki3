@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import pl.edu.utp.pralki3.entity.Reservation;
 import pl.edu.utp.pralki3.entity.User;
 import pl.edu.utp.pralki3.entity.Washer;
@@ -78,7 +79,7 @@ public class ReservationController {
             model.addAttribute("message", "Rezerwacja niemożliwa. Wybierz inny termin lub pralkę");
         }
 
-        if (!reservationService.checkUser(user)) {
+        if (!reservationService.checkUser(user,reservation.getStart())) {
             bindingResult.rejectValue("start", "Osiągnąłeś limit rezerwacji na wskazany dzień!");
             model.addAttribute("message", "Osiągnąłeś limit rezerwacji na wskazany dzień!");
         }
@@ -108,7 +109,14 @@ public class ReservationController {
 
     @GET
     @RequestMapping("/reservations")
-    public String showUserReservations(Model model) {
+    public String showUserReservations(Model model, @RequestParam(required = false) String cancel) {
+        if (cancel != null) {
+            try {
+                reservationService.deactivateReservation(Integer.parseInt(cancel));
+            } catch (NumberFormatException ex) {
+                model.addAttribute("message", "Błąd podczas rezygnacji z rezerwacji");
+            }
+        }
         User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
         model.addAttribute("user", user);
         List<Reservation> reservations = reservationService.findByUserTodayOrLater(user);

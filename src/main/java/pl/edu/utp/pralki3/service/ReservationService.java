@@ -15,10 +15,6 @@ import java.util.stream.Collectors;
 public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private WasherService washerService;
 
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
@@ -67,14 +63,20 @@ public class ReservationService {
         return true;
     }
 
-    public boolean checkUser(User user) {
-        int d = LocalDateTime.now().getDayOfMonth();
-        int m = LocalDateTime.now().getMonthValue();
-        int y = LocalDateTime.now().getYear();
+    public boolean checkUser(User user, LocalDateTime date) {
+        int d = date.getDayOfMonth();
+        int m = date.getMonthValue();
+        int y = date.getYear();
         List<Reservation> reservations = findByUser(user).stream().filter(r -> r.getStart().getYear() == y && r.getStart().getMonthValue() == m && r.getStart().getDayOfMonth() == d).collect(Collectors.toList());
         if (reservations.size() > 0) {
             return false;
         }
         return true;
+    }
+
+    public void deactivateReservation(int id) {
+        Reservation reservation = reservationRepository.getOne(id);
+        reservation.setActive(false);
+        reservationRepository.save(reservation);
     }
 }
