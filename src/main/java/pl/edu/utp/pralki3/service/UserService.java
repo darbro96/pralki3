@@ -50,14 +50,44 @@ public class UserService {
     }
 
     public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
+        return updatePages(userRepository.findAll(pageable));
     }
 
     public Page<User> findAll(Pageable pageable, String word) {
-        return userRepository.findAll(pageable, word);
+        return updatePages(userRepository.findAll(pageable, word));
     }
 
     public User get(int id) {
         return userRepository.getOne(id);
+    }
+
+    public void updateUser(User user) {
+        Role role = roleRepository.findByRole(user.getNameOfRole());
+        user.setNrRoli(role.getIdRole());
+        user.setRoles(new HashSet<>(Arrays.asList(role)));
+        user.setDormitory(dormitoryService.findByName(user.getNameOfDormitory()));
+        userRepository.updateName(user.getName(), user.getEmail());
+        userRepository.updateLastName(user.getLastName(), user.getEmail());
+        userRepository.updateDormitory(user.getDormitory(), user.getEmail());
+    }
+
+    public void deleteUser(User user) {
+        userRepository.deleteFromUserRole(user.getIdUser());
+        userRepository.deleteFromUser(user.getIdUser());
+    }
+
+    private Page<User> updatePages(Page<User> pages) {
+        for (User u : pages) {
+            u.setNrRoli(u.getRoles().iterator().next().getIdRole());
+        }
+        return pages;
+    }
+
+    public void activateUser(User user) {
+        user.setActive(1);
+    }
+
+    public void deactivateUser(User user) {
+        user.setActive(0);
     }
 }

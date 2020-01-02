@@ -76,6 +76,27 @@
                 </c:choose>
             </td>
             <td><c:out value="${u.dormitory.name}"/></td>
+            <td>
+                <button onclick="window.location.href='${pageContext.request.contextPath}/edituser/${u.idUser}'">
+                    Edytuj
+                </button>&nbsp;
+                <c:if test="${u.nrRoli==2}">
+                    <button onclick="window.location.href='${pageContext.request.contextPath}/deleteuser/${u.idUser}'">
+                        Usuń
+                    </button>
+                    &nbsp
+                    <c:if test="${u.active==1}">
+                        <button onclick="window.location.href='${pageContext.request.contextPath}/deactivateuser/${u.idUser}'">
+                            Dezaktywuj
+                        </button>
+                    </c:if>
+                    <c:if test="${u.active==0}">
+                        <button onclick="window.location.href='${pageContext.request.contextPath}/activateuser/${u.idUser}'">
+                            Aktywuj
+                        </button>
+                    </c:if>
+                </c:if>
+            </td>
         </tr>
     </c:forEach>
 </table>
