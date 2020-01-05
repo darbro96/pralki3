@@ -90,4 +90,21 @@ public class UserService {
     public void deactivateUser(User user) {
         user.setActive(0);
     }
+
+    public void updateCardId(User user)
+    {
+        userRepository.updateCardId(user.getCardId(),user.getEmail());
+    }
+
+    public boolean checkCard(String idCard)
+    {
+        for(User u:findAll())
+        {
+            if(u.getCardId()!=null &&  idCard.equals(u.getCardId()))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }

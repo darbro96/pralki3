@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     //    @Query(value = "SELECT * FROM User u ORDER BY u.last_name", nativeQuery = true)
     Page<User> findAll(Pageable pageable);
 
-    @Query(value = "SELECT * FROM User u WHERE u.name LIKE %:param% OR u.last_name LIKE %:param% OR u.email LIKE %:param% ORDER BY u.last_name", nativeQuery = true)
+    @Query(value = "SELECT * FROM User u WHERE u.name LIKE %:param% OR u.last_name LIKE %:param% OR u.email LIKE %:param% OR u.card_id LIKE %:param% ORDER BY u.last_name", nativeQuery = true)
     Page<User> findAll(Pageable pageable, @Param("param") String param);
 
     @Modifying
@@ -41,4 +41,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query(value = "DELETE FROM user WHERE user_id=:userId",nativeQuery = true)
     void deleteFromUser(@Param("userId") int userId);
+
+    @Modifying
+    @Query(value = "UPDATE User u SET u.cardId= :cardId WHERE u.email= :email")
+    void updateCardId(@Param("cardId") String cardId, @Param("email") String email);
 }

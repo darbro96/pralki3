@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.edu.utp.pralki3.entity.*;
+import pl.edu.utp.pralki3.model.CardToUser;
 import pl.edu.utp.pralki3.service.*;
 
 import javax.ws.rs.DELETE;
@@ -226,7 +227,7 @@ public class AdminPagesController {
     @RequestMapping(value = "/edituser/edit")
     public String editUserAction(User user, BindingResult bindingResult, Model model, Locale locale) {
         userService.updateUser(user);
-        return "redirect:users";
+        return "redirect:/users";
     }
 
     @DELETE
@@ -234,11 +235,11 @@ public class AdminPagesController {
     public String deleteUser(@PathVariable("id") int idUser) {
         User user = userService.get(idUser);
         userService.deleteUser(user);
-        return "redirect:users";
+        return "redirect:/users";
     }
 
     @GET
-    @RequestMapping(value = "activateuser/{id}")
+    @RequestMapping(value = "/activateuser/{id}")
     public String activateUser(@PathVariable("id") int idUser) {
         User user = userService.get(idUser);
         userService.activateUser(user);
@@ -246,10 +247,39 @@ public class AdminPagesController {
     }
 
     @GET
-    @RequestMapping(value = "deactivateuser/{id}")
+    @RequestMapping(value = "/deactivateuser/{id}")
     public String deactivateUser(@PathVariable("id") int idUser) {
         User user = userService.get(idUser);
         userService.deactivateUser(user);
         return "redirect:/users";
+    }
+
+    @GET
+    @RequestMapping(value = "/assigncard/{id}")
+    public String assignCardView(Model model, @PathVariable("id") int idUser) {
+        User user = userService.get(idUser);
+        CardToUser cardToUser = new CardToUser();
+        cardToUser.setUsername(user.getEmail());
+        model.addAttribute("user", user);
+        model.addAttribute("cardToUser", cardToUser);
+        return "assignCardForm";
+    }
+
+    @POST
+    @RequestMapping(value = "/assigncardaction")
+    public String assignCardAction(CardToUser cardToUser, BindingResult bindingResult, Model model, Locale locale) {
+        User user = userService.findUserByEmail(cardToUser.getUsername());
+        if (userService.checkCard(cardToUser.getCardId())) {
+            user.setCardId(cardToUser.getCardId());
+            userService.updateCardId(user);
+            return "redirect:/users";
+        } else {
+            model.addAttribute("message", "Karta jest już przypisana do innego użytkownika!");
+            cardToUser = new CardToUser();
+            cardToUser.setUsername(user.getEmail());
+            model.addAttribute("user", user);
+            model.addAttribute("cardToUser", cardToUser);
+            return "assignCardForm";
+        }
     }
 }

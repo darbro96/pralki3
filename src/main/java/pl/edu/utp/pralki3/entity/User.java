@@ -37,6 +37,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "id_dormitory")
     private Dormitory dormitory;
+    @Column(name = "card_id")
+    private String cardId;
     @Transient
     private String operacja;
     @Transient
