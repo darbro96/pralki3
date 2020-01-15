@@ -45,12 +45,14 @@ public class PanelController {
             List<Washer> washers = washerService.findAll();
             washers = washers.stream().filter(w -> w.getLaundry().getDormitory().getIdDormitory() == user.getDormitory().getIdDormitory()).collect(Collectors.toList());
             model.addAttribute("washers", washers);
+            model.addAttribute("message","Wybierz pralkę");
         }
         if (washer != null) {
             Washer washerObj = washerService.get(Integer.parseInt(washer));
             List<Timetable> timetables = prepareTimetable(user, washerObj);
             model.addAttribute("timetables", timetables);
             model.addAttribute("hours", generateHours());
+            model.addAttribute("message", "Harmonogram pralki:  "+washerObj.getNumberWasher()+" (pralnia "+washerObj.getLaundry().getNumberLaundry()+")");
         }
         return "panel_new";
     }
@@ -62,7 +64,8 @@ public class PanelController {
             LocalDateTime today = LocalDateTime.now().plusDays(i);
             LocalDateTime date = LocalDateTime.of(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), 6, 0);
             Timetable timetable = new Timetable();
-            timetable.setDay(date.getDayOfMonth() + "." + date.getMonthValue() + "." + date.getYear());
+            String month = date.getMonthValue() < 10 ? "0" + date.getMonthValue() : String.valueOf(date.getMonthValue());
+            timetable.setDay(date.getDayOfMonth() + "." + month + "." + date.getYear());
             List<Reservation> tmp = reservations.stream().filter(r -> compareEqualsOfDate(r.getStart(), today.getDayOfMonth(), today.getMonthValue(), today.getYear())).collect(Collectors.toList());
             List<SpecialReservation> specialReservations = new ArrayList<>();
             int diff = -1;
@@ -111,7 +114,9 @@ public class PanelController {
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime date = LocalDateTime.of(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), 6, 0);
         while (date.getHour() <= 21) {
-            hours.add(date.getHour() + ":" + date.getMinute());
+            String hour = date.getHour() < 10 ? "0" + date.getHour() : String.valueOf(date.getHour());
+            String min = date.getMinute() < 10 ? "0" + date.getMinute() : String.valueOf(date.getMinute());
+            hours.add(hour + ":" + min);
             date = date.plusMinutes(30);
         }
         return hours;

@@ -1,6 +1,5 @@
 package pl.edu.utp.pralki3.mainController;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +18,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 @Controller
 @Secured(value = {"ROLE_ADMIN"})
@@ -38,6 +37,9 @@ public class AdminPagesController {
 
     @Autowired
     private RoleSerivce roleSerivce;
+
+    @Autowired
+    private RoomService roomService;
 
     private static final int ELEMENTS = 10;
 
@@ -214,6 +216,9 @@ public class AdminPagesController {
         } catch (NullPointerException ex) {
             user.setNameOfDormitory(null);
         }
+        if (user.getRoom() != null) {
+            user.setNumberOfRoom(user.getRoom().getNumber());
+        }
         user.setNameOfRole(user.getRoles().iterator().next().getRole());
         model.addAttribute("user", user);
         List<Dormitory> dormsList = dormitoryService.findAll();
@@ -226,8 +231,20 @@ public class AdminPagesController {
     @POST
     @RequestMapping(value = "/edituser/edit")
     public String editUserAction(User user, BindingResult bindingResult, Model model, Locale locale) {
-        userService.updateUser(user);
-        return "redirect:/users";
+        try {
+            Room room = roomService.findByNumber(user.getNumberOfRoom(), dormitoryService.findByName(user.getNameOfDormitory()));
+            if (userService.findUsersFromRoom(room).size() >= room.getCapacity()) {
+                bindingResult.rejectValue("numberOfRoom", "error.room");
+            }
+        } catch (NoSuchElementException ex) {
+            bindingResult.rejectValue("numberOfRoom", "error.room");
+        }
+        if (bindingResult.hasErrors()) {
+            return "usereditor";
+        } else {
+            userService.updateUser(user);
+            return "redirect:/users";
+        }
     }
 
     @DELETE
@@ -265,6 +282,15 @@ public class AdminPagesController {
         return "assignCardForm";
     }
 
+    @GET
+    @RequestMapping(value = "/unassigncard/{id}")
+    public String unassignCard(@PathVariable("id") int idUser)
+    {
+        User user=userService.get(idUser);
+        userService.clearCardId(user);
+        return "redirect:/users";
+    }
+
     @POST
     @RequestMapping(value = "/assigncardaction")
     public String assignCardAction(CardToUser cardToUser, BindingResult bindingResult, Model model, Locale locale) {
@@ -280,6 +306,45 @@ public class AdminPagesController {
             model.addAttribute("user", user);
             model.addAttribute("cardToUser", cardToUser);
             return "assignCardForm";
+        }
+    }
+
+    @GET
+    @RequestMapping(value = "/addroom")
+    public String addRoom(Model model) {
+        List<Dormitory> dormitories = dormitoryService.findAll();
+        model.addAttribute("dormitories", dormitories);
+        Room room = new Room();
+        model.addAttribute("room", room);
+        List<RoomType> roomTypes = roomService.findAllTypes();
+        model.addAttribute("roomTypes", roomTypes);
+        return "addRoom";
+    }
+
+    @POST
+    @RequestMapping(value = "/addroomaction")
+    public String addRoomAction(Room room, BindingResult bindingResult, Model model, Locale locale) {
+        Dormitory dormitory = dormitoryService.findByName(room.getNameOfDormitory());
+        Room roomExist = null;
+        try {
+            roomExist = roomService.findByNumber(room.getNumber(), dormitory);
+        } catch (NoSuchElementException ex) {
+            roomExist = null;
+        }
+        if (roomExist != null) {
+            bindingResult.rejectValue("number", "error.roomExist");
+        }
+        if (bindingResult.hasErrors()) {
+            List<Dormitory> dormitories = dormitoryService.findAll();
+            model.addAttribute("dormitories", dormitories);
+            room = new Room();
+            model.addAttribute("room", room);
+            List<RoomType> roomTypes = roomService.findAllTypes();
+            model.addAttribute("roomTypes", roomTypes);
+            return "addRoom";
+        } else {
+            roomService.saveRoom(room);
+            return "redirect:/panel";
         }
     }
 }

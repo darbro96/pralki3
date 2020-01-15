@@ -35,7 +35,8 @@
 <h1>Lista użytkowników</h1>
 <c:set var="count" value="0" scope="page"/>
 <input type="hidden" name="cp" id="cp" value="${currentPage}"/>
-<input type="text" id="searchString"/>&nbsp;&nbsp;<input type="button" id="buttonSearch" value="<s:message code="button.search"/>"
+<input type="text" id="searchString"/>&nbsp;&nbsp;<input type="button" id="buttonSearch"
+                                                         value="<s:message code="button.search"/>"
                                                          onclick="startSerach(0);"/><br/>
 <span id="errorSearch" style="color: red;"></span>
 <table border="1" cellpadding="6" cellspacing="0">
@@ -98,7 +99,16 @@
                         </button>
                     </c:if>
                 </c:if>
-                <button onclick="window.location.href='${pageContext.request.contextPath}/assigncard/${u.idUser}'">Przypisz kartę</button>
+                <c:if test="${u.cardId==null}">
+                    <button onclick="window.location.href='${pageContext.request.contextPath}/assigncard/${u.idUser}'">
+                        Przypisz kartę
+                    </button>
+                </c:if>
+                <c:if test="${u.cardId!=null}">
+                    <button onclick="window.location.href='${pageContext.request.contextPath}/unassigncard/${u.idUser}'">
+                        Usuń kartę
+                    </button>
+                </c:if>
             </td>
         </tr>
     </c:forEach>

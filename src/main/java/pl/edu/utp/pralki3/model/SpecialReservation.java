@@ -12,6 +12,6 @@ public class SpecialReservation {
     public static final String USER_COLOR = "#00FA9A";
     public static final String OTHER_COLOR = "#FF4500";
 
-    public Reservation reservation;
-    public String color;
+    private Reservation reservation;
+    private String color;
 }

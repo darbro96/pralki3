@@ -16,29 +16,36 @@
 <body>
 <%@include file="/WEB-INF/incl/menu_user.app" %>
 <div style="text-align: center;">
-<h1>Twój profil</h1><br>
-<p>E-mail:&nbsp;&nbsp;<b><c:out value="${user.email}"/> </b></p>
-<p>Imię:&nbsp;&nbsp;<b><c:out value="${user.name}"/> </b></p>
-<p>Nazwisko:&nbsp;&nbsp;<b><c:out value="${user.lastName}"/> </b></p>
-<p>Czy aktywny?&nbsp;&nbsp;
-    <c:choose>
-        <c:when test="${user.active==1}"><font color="green">TAK</font></c:when>
-        <c:otherwise><font color="green">NIE</font></c:otherwise>
-    </c:choose>
-</p>
-<p>Rola:&nbsp;&nbsp;
-<c:choose>
-    <c:when test="${user.nrRoli==1}">Administrator</c:when>
-    <c:otherwise>Użytkownik</c:otherwise>
-</c:choose>
-</p>
-<p>Akademik:
-    <c:choose>
-        <c:when test="${user.dormitory.name==null}">Nie zdefiniowano</c:when>
-        <c:otherwise><c:out value="${user.dormitory.name}" /> </c:otherwise>
-    </c:choose>
-</p>
-<p><button onclick="window.location.href='${pageContext.request.contextPath}/editpassword'">Zmiana hasła</button></p>
+    <h1>Twój profil</h1><br>
+    <p>E-mail:&nbsp;&nbsp;<b><c:out value="${user.email}"/> </b></p>
+    <p>Imię:&nbsp;&nbsp;<b><c:out value="${user.name}"/> </b></p>
+    <p>Nazwisko:&nbsp;&nbsp;<b><c:out value="${user.lastName}"/> </b></p>
+    <p>Czy aktywny?&nbsp;&nbsp;
+        <c:choose>
+            <c:when test="${user.active==1}"><font color="green">TAK</font></c:when>
+            <c:otherwise><font color="green">NIE</font></c:otherwise>
+        </c:choose>
+    </p>
+    <p>Rola:&nbsp;&nbsp;
+        <c:choose>
+            <c:when test="${user.nrRoli==1}">Administrator</c:when>
+            <c:otherwise>Użytkownik</c:otherwise>
+        </c:choose>
+    </p>
+    <p>Akademik:
+        <c:choose>
+            <c:when test="${user.dormitory.name==null}">Nie zdefiniowano</c:when>
+            <c:otherwise><c:out value="${user.dormitory.name}"/> </c:otherwise>
+        </c:choose>
+    </p>
+    <p>
+        <c:if test="${user.room!=null}">
+            Pokój: ${user.room.number}
+        </c:if>
+    </p>
+    <p>
+        <button onclick="window.location.href='${pageContext.request.contextPath}/editpassword'">Zmiana hasła</button>
+    </p>
 </div>
 </body>
 </html>

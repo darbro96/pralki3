@@ -71,6 +71,14 @@
         </tr>
 
         <tr>
+            <td width="130" align="right">Pokój:</td>
+            <td width="270" align="left"><sf:input path="numberOfRoom" size="28"/></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><font color="red"><sf:errors path="numberOfRoom"/></font></td>
+        </tr>
+
+        <tr>
             <td width="130" align="right">Rola</td>
             <td width="270" align="left">
                 <sf:select path="nameOfRole">

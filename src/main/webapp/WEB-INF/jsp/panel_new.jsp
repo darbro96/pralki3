@@ -27,19 +27,15 @@
         </p>
         <p>Podgląd aktualnego rozkładu rezerwacji</p>
         <div class="btn-group ml-auto">
-                <%--            <button type="button" class="btn btn-primary">Pralka nr 12</button>--%>
-                <%--            <button type="button" class="btn btn-primary">Pralka nr 13</button>--%>
-                <%--            <button type="button" class="btn btn-primary">Pralka nr 14</button>--%>
-                <%--            <button type="button" class="btn btn-primary">Pralka nr 15</button>--%>
-                <%--            <button type="button" class="btn btn-primary">Pralka nr 16</button>--%>
-                <%--            <button type="button" class="btn btn-primary">Pralka nr 17</button>--%>
             <c:forEach var="w" items="${washers}">
                 <button type="button" class="btn btn-primary"
                         onclick="window.location.href='${pageContext.request.contextPath}/panel?washer=${w.idWasher}'">
                     Pralka nr <c:out value="${w.numberWasher}"/> (pralnia <c:out value="${w.laundry.numberLaundry}"/>)
-                </button>&nbsp;
+                </button>
+                &nbsp;
             </c:forEach>
         </div>
+        <p><c:out value="${message}"/></p>
         <c:set var="timetable" value="0"/>
         <c:set var="sr" value="0"/>
         <c:set var="size" value="${timetables.size()-1}"/>
@@ -78,6 +74,7 @@
     <p><a href="${pageContext.request.contextPath}/adddormitory">Dodaj akademik</a></p>
     <p><a href="${pageContext.request.contextPath}/addlaundry">Dodaj pralnię</a></p>
     <p><a href="${pageContext.request.contextPath}/addwasher">Dodaj pralkę</a></p>
+    <p><a href="${pageContext.request.contextPath}/addroom">Dodaj pokój</a></p>
 </sec:authorize>
 </body>
 </html>

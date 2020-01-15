@@ -39,6 +39,9 @@ public class User {
     private Dormitory dormitory;
     @Column(name = "card_id")
     private String cardId;
+    @ManyToOne
+    @JoinColumn(name = "id_room")
+    private Room room;
     @Transient
     private String operacja;
     @Transient
@@ -49,5 +52,6 @@ public class User {
     private String nameOfDormitory;
     @Transient
     private String nameOfRole;
-
+    @Transient
+    private String numberOfRoom;
 }

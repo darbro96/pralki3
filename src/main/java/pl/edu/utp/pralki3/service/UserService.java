@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.edu.utp.pralki3.entity.Role;
+import pl.edu.utp.pralki3.entity.Room;
 import pl.edu.utp.pralki3.entity.User;
 import pl.edu.utp.pralki3.repository.RoleRepository;
 import pl.edu.utp.pralki3.repository.UserRepository;
@@ -14,6 +15,7 @@ import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -26,6 +28,8 @@ public class UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private DormitoryService dormitoryService;
+    @Autowired
+    private RoomService roomService;
 
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -38,6 +42,7 @@ public class UserService {
         user.setNrRoli(role.getIdRole());
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         user.setDormitory(dormitoryService.findByName(user.getNameOfDormitory()));
+        user.setRoom(roomService.findByNumber(user.getNumberOfRoom(), user.getDormitory()));
         userRepository.save(user);
     }
 
@@ -66,9 +71,11 @@ public class UserService {
         user.setNrRoli(role.getIdRole());
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         user.setDormitory(dormitoryService.findByName(user.getNameOfDormitory()));
+        user.setRoom(roomService.findByNumber(user.getNumberOfRoom(), user.getDormitory()));
         userRepository.updateName(user.getName(), user.getEmail());
         userRepository.updateLastName(user.getLastName(), user.getEmail());
         userRepository.updateDormitory(user.getDormitory(), user.getEmail());
+        userRepository.updateRoom(user.getRoom().getIdRoom(), user.getEmail());
     }
 
     public void deleteUser(User user) {
@@ -91,20 +98,24 @@ public class UserService {
         user.setActive(0);
     }
 
-    public void updateCardId(User user)
-    {
-        userRepository.updateCardId(user.getCardId(),user.getEmail());
+    public void updateCardId(User user) {
+        userRepository.updateCardId(user.getCardId(), user.getEmail());
     }
 
-    public boolean checkCard(String idCard)
-    {
-        for(User u:findAll())
-        {
-            if(u.getCardId()!=null &&  idCard.equals(u.getCardId()))
-            {
+    public void clearCardId(User user) {
+        userRepository.clearCardId(user.getEmail());
+    }
+
+    public boolean checkCard(String idCard) {
+        for (User u : findAll()) {
+            if (u.getCardId() != null && idCard.equals(u.getCardId())) {
                 return false;
             }
         }
         return true;
+    }
+
+    public List<User> findUsersFromRoom(Room room) {
+        return findAll().stream().filter(u -> u.getRoom() != null && u.getRoom().getIdRoom() == room.getIdRoom()).collect(Collectors.toList());
     }
 }
