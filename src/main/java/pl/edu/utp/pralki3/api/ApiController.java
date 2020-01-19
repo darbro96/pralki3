@@ -1,4 +1,4 @@
-package pl.edu.utp.pralki3.mainController;
+package pl.edu.utp.pralki3.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -12,15 +12,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class ApiRestController {
+@Secured(value = {"ROLE_ADMIN"})
+public class ApiController {
     @Autowired
     private UserService userService;
 
     @GET
     @RequestMapping("/users")
-    @Secured(value = {"ROLE_ADMIN"})
-    public List<User> users()
-    {
-        return userService.findAll();
+    public List<User> getAllUsers() {
+        List<User> users = userService.findAll();
+        users.forEach(u -> u.setPassword(null));
+        return users;
     }
 }

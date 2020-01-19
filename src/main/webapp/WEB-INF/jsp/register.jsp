@@ -33,7 +33,10 @@
 
         <tr>
             <td width="130" align="right"><s:message code="register.name"/></td>
-            <td width="270" align="left"><sf:input path="name" size="28" id="name"/></td>
+            <td width="270" align="left"><div class="form-group">
+                <label for="usr">Name:</label>
+                <input type="text" class="form-control" id="usr">
+            </div></td>
         </tr>
         <tr>
             <td colspan="2" align="center"><font color="red"><sf:errors path="name"/></font></td>

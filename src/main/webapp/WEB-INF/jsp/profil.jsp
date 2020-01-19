@@ -16,58 +16,88 @@
 </head>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
-<div  class="container text-center">
+<div class="container text-center">
     <h1>Twój profil</h1><br>
-    <p>E-mail:&nbsp;&nbsp;<b><c:out value="${user.email}"/> </b></p>
-    <p>Imię:&nbsp;&nbsp;<b><c:out value="${user.name}"/> </b></p>
-    <p>Nazwisko:&nbsp;&nbsp;<b><c:out value="${user.lastName}"/> </b></p>
-    <p>Czy aktywny?&nbsp;&nbsp;
-        <c:choose>
-            <c:when test="${user.active==1}"><font color="green">TAK</font></c:when>
-            <c:otherwise><font color="green">NIE</font></c:otherwise>
-        </c:choose>
-    </p>
-    <p>Rola:&nbsp;&nbsp;
-        <c:choose>
-            <c:when test="${user.nrRoli==1}">Administrator</c:when>
-            <c:otherwise>Użytkownik</c:otherwise>
-        </c:choose>
-    </p>
-    <p>Akademik:
-        <c:choose>
-            <c:when test="${user.dormitory.name==null}">Nie zdefiniowano</c:when>
-            <c:otherwise><c:out value="${user.dormitory.name}"/> </c:otherwise>
-        </c:choose>
-    </p>
-    <p>
-        <c:if test="${user.room!=null}">
-            Pokój: ${user.room.number}
-        </c:if>
-    </p>
-    <p>
-        <button onclick="window.location.href='${pageContext.request.contextPath}/editpassword'">Zmiana hasła</button>
-    </p>
+    <%--    <p>E-mail:&nbsp;&nbsp;<b><c:out value="${user.email}"/> </b></p>--%>
+    <%--    <p>Imię:&nbsp;&nbsp;<b><c:out value="${user.name}"/> </b></p>--%>
+    <%--    <p>Nazwisko:&nbsp;&nbsp;<b><c:out value="${user.lastName}"/> </b></p>--%>
+    <%--    <p>Czy aktywny?&nbsp;&nbsp;--%>
+    <%--        <c:choose>--%>
+    <%--            <c:when test="${user.active==1}"><font color="green">TAK</font></c:when>--%>
+    <%--            <c:otherwise><font color="green">NIE</font></c:otherwise>--%>
+    <%--        </c:choose>--%>
+    <%--    </p>--%>
+    <%--    <p>Rola:&nbsp;&nbsp;--%>
+    <%--        <c:choose>--%>
+    <%--            <c:when test="${user.nrRoli==1}">Administrator</c:when>--%>
+    <%--            <c:otherwise>Użytkownik</c:otherwise>--%>
+    <%--        </c:choose>--%>
+    <%--    </p>--%>
+    <%--    <p>Akademik:--%>
+    <%--        <c:choose>--%>
+    <%--            <c:when test="${user.dormitory.name==null}">Nie zdefiniowano</c:when>--%>
+    <%--            <c:otherwise><c:out value="${user.dormitory.name}"/> </c:otherwise>--%>
+    <%--        </c:choose>--%>
+    <%--    </p>--%>
+    <%--    <p>--%>
+    <%--        <c:if test="${user.room!=null}">--%>
+    <%--            Pokój: ${user.room.number}--%>
+    <%--        </c:if>--%>
+    <%--    </p>--%>
 
-<div class="card-body">
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <tbody>
-            <tr>
-                <td>E-mail</td>
-                <td><b><c:out value="${user.email}"/> </b></td>
-            </tr>
-            <tr>
-                <td>Imię</td>
-                <td><b><c:out value="${user.name}"/> </b></td>
-            </tr>
-            <tr>
-                <td>Nazwisko</td>
-                <td><b><c:out value="${user.lastName}"/></td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <td>E-mail</td>
+                    <td><b><c:out value="${user.email}"/> </b></td>
+                </tr>
+                <tr>
+                    <td>Imię</td>
+                    <td><b><c:out value="${user.name}"/> </b></td>
+                </tr>
+                <tr>
+                    <td>Nazwisko</td>
+                    <td><b><c:out value="${user.lastName}"/></td>
+                </tr>
+                <tr>
+                    <td>Rola</td>
+                    <td>
+                        <b>
+                            <c:choose>
+                                <c:when test="${user.nrRoli==1}">Administrator</c:when>
+                                <c:otherwise>Użytkownik</c:otherwise>
+                            </c:choose>
+                        </b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Akademik</td>
+                    <td>
+                        <b>
+                            <c:choose>
+                                <c:when test="${user.dormitory.name==null}">Nie zdefiniowano</c:when>
+                                <c:otherwise><c:out value="${user.dormitory.name}"/> </c:otherwise>
+                            </c:choose>
+                        </b>
+                    </td>
+                    </td>
+                </tr>
+                <c:if test="${user.room!=null}">
+                    <tr>
+                        <td>Pokój:</td>
+                        <td><b>${user.room.number}</b></td>
+                    </tr>
+                </c:if>
+                </tbody>
+            </table>
+            <p>
+                <button onclick="window.location.href='${pageContext.request.contextPath}/editpassword'">Zmiana hasła
+                </button>
+            </p>
+        </div>
     </div>
-</div>
 </div>
 </body>
 </html>

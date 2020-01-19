@@ -1,0 +1,10 @@
+body{
+    background-image: url("/resources/img/obrazek.jpg");
+    background-color: #cccccc;
+    background-position: center;
+    background-repeat: no-repeat;
+
+}
+.bg-university{
+    background-color: darkred;
+}

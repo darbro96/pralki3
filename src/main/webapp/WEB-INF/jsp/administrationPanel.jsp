@@ -22,7 +22,7 @@
 
             <nav class="nav flex-column grey lighten-4 py-4 font-weight-bold">
                 Mieszkańcy
-                <a class="nav-link active" href="/users">Wyszukaj</a>
+                <a class="nav-link active" href="/users2">Wyszukaj</a>
                 <a class="nav-link" href="register">Dodaj</a>
                 <a class="nav-link" href="#">Wymelduj</a>
                 <a class="nav-link" href="#">Przenieś</a>

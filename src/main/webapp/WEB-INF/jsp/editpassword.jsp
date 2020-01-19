@@ -10,13 +10,14 @@
     <title>Pralki</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/css/administrationPanel.css" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<%@include file="/WEB-INF/incl/menu_user.app" %>
-<div style="text-align: center;">
+<%@include file="/WEB-INF/incl/menu.app" %>
+<div class="container text-center">
     <h2>Zmiana hasła</h2>
     <p><c:out value="${message}"/></p>
     <sf:form id="usersForm" action="updatepass" modelAttribute="user" enctype="multipart/form-data" method="POST">

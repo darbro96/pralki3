@@ -78,9 +78,9 @@ public class AdminPagesController {
     @RequestMapping(value = "/users/{page}")
     @Secured(value = {"ROLE_ADMIN"})
     public String showUsers(Model model, @PathVariable("page") int page) {
-        String username= UserUtilities.getLoggedUser();
-        User user=userService.findUserByEmail(username);
-        model.addAttribute("user",user);
+        String username = UserUtilities.getLoggedUser();
+        User user = userService.findUserByEmail(username);
+        model.addAttribute("user", user);
         Page<User> pages = getAllUsersPageable(page - 1);
         int totalPages = pages.getTotalPages();
         int currentPage = pages.getNumber();
@@ -95,9 +95,9 @@ public class AdminPagesController {
     @RequestMapping(value = "/users")
     @Secured(value = {"ROLE_ADMIN"})
     public String showUsersNoPage(Model model) {
-        String username= UserUtilities.getLoggedUser();
-        User user=userService.findUserByEmail(username);
-        model.addAttribute("user",user);
+        String username = UserUtilities.getLoggedUser();
+        User user = userService.findUserByEmail(username);
+        model.addAttribute("user", user);
         int page = 1;
         Page<User> pages = getAllUsersPageable(page - 1);
         int totalPages = pages.getTotalPages();
@@ -291,9 +291,8 @@ public class AdminPagesController {
 
     @GET
     @RequestMapping(value = "/unassigncard/{id}")
-    public String unassignCard(@PathVariable("id") int idUser)
-    {
-        User user=userService.get(idUser);
+    public String unassignCard(@PathVariable("id") int idUser) {
+        User user = userService.get(idUser);
         userService.clearCardId(user);
         return "redirect:/users";
     }
@@ -353,5 +352,13 @@ public class AdminPagesController {
             roomService.saveRoom(room);
             return "redirect:/panel";
         }
+    }
+
+    @GET
+    @RequestMapping("/users2")
+    public String newVersionUsers(Model model) {
+        User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("user", user);
+        return "users_new";
     }
 }
