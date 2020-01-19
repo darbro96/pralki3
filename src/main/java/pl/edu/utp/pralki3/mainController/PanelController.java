@@ -46,15 +46,20 @@ public class PanelController {
             washers = washers.stream().filter(w -> w.getLaundry().getDormitory().getIdDormitory() == user.getDormitory().getIdDormitory()).collect(Collectors.toList());
             model.addAttribute("washers", washers);
             model.addAttribute("message","Wybierz pralkę");
+            if (washer != null) {
+                Washer washerObj = washerService.get(Integer.parseInt(washer));
+                List<Timetable> timetables = prepareTimetable(user, washerObj);
+                model.addAttribute("timetables", timetables);
+                model.addAttribute("hours", generateHours());
+                model.addAttribute("message", "Harmonogram pralki:  "+washerObj.getNumberWasher()+" (pralnia "+washerObj.getLaundry().getNumberLaundry()+")");
+            }
+            return "panel_new";
         }
-        if (washer != null) {
-            Washer washerObj = washerService.get(Integer.parseInt(washer));
-            List<Timetable> timetables = prepareTimetable(user, washerObj);
-            model.addAttribute("timetables", timetables);
-            model.addAttribute("hours", generateHours());
-            model.addAttribute("message", "Harmonogram pralki:  "+washerObj.getNumberWasher()+" (pralnia "+washerObj.getLaundry().getNumberLaundry()+")");
+        else
+        {
+            return "administrationPanel";
         }
-        return "panel_new";
+
     }
 
     private List<Timetable> prepareTimetable(User user, Washer washer) {

@@ -62,7 +62,7 @@ public class RegisterController {
         } catch (NoSuchElementException ex) {
             bindingResult.rejectValue("numberOfRoom", "error.room");
         }
-        if (bindingResult.hasErrors()) {
+            if (bindingResult.hasErrors()) {
             returnPage = "register";
         } else {
             userService.saveUser(user);

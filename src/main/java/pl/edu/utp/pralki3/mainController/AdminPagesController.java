@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.edu.utp.pralki3.entity.*;
 import pl.edu.utp.pralki3.model.CardToUser;
+import pl.edu.utp.pralki3.model.UserUtilities;
 import pl.edu.utp.pralki3.service.*;
 
 import javax.ws.rs.DELETE;
@@ -77,6 +78,9 @@ public class AdminPagesController {
     @RequestMapping(value = "/users/{page}")
     @Secured(value = {"ROLE_ADMIN"})
     public String showUsers(Model model, @PathVariable("page") int page) {
+        String username= UserUtilities.getLoggedUser();
+        User user=userService.findUserByEmail(username);
+        model.addAttribute("user",user);
         Page<User> pages = getAllUsersPageable(page - 1);
         int totalPages = pages.getTotalPages();
         int currentPage = pages.getNumber();
@@ -91,6 +95,9 @@ public class AdminPagesController {
     @RequestMapping(value = "/users")
     @Secured(value = {"ROLE_ADMIN"})
     public String showUsersNoPage(Model model) {
+        String username= UserUtilities.getLoggedUser();
+        User user=userService.findUserByEmail(username);
+        model.addAttribute("user",user);
         int page = 1;
         Page<User> pages = getAllUsersPageable(page - 1);
         int totalPages = pages.getTotalPages();

@@ -9,13 +9,14 @@
     <title>Pralki</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/css/administrationPanel.css" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<%@include file="/WEB-INF/incl/menu_user.app" %>
-<div style="text-align: center;">
+<%@include file="/WEB-INF/incl/menu.app" %>
+<div  class="container text-center">
     <h1>Twój profil</h1><br>
     <p>E-mail:&nbsp;&nbsp;<b><c:out value="${user.email}"/> </b></p>
     <p>Imię:&nbsp;&nbsp;<b><c:out value="${user.name}"/> </b></p>
@@ -46,6 +47,27 @@
     <p>
         <button onclick="window.location.href='${pageContext.request.contextPath}/editpassword'">Zmiana hasła</button>
     </p>
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <tbody>
+            <tr>
+                <td>E-mail</td>
+                <td><b><c:out value="${user.email}"/> </b></td>
+            </tr>
+            <tr>
+                <td>Imię</td>
+                <td><b><c:out value="${user.name}"/> </b></td>
+            </tr>
+            <tr>
+                <td>Nazwisko</td>
+                <td><b><c:out value="${user.lastName}"/></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </div>
 </body>
 </html>

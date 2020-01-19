@@ -1,0 +1,17 @@
+#content{
+    height: 100vh;
+}
+
+.bg-nav{
+    background-color: #003056;
+}
+.bg-nav2{
+    background-color: #EAEAEA;
+}
+.padm{
+    padding-top: 60px;
+}
+
+.shadow{
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1);
+}

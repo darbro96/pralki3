@@ -1,17 +1,6 @@
-<table width="100%" border="0" cellpadding="8" cellspacing="4" class="tableMenuBg" bgcolor="#e6f2ff">
-	<tr>
-		<td align="left" width="900">
-			<a href="/panel"><s:message code="menu.mainPage"/></a>&nbsp;&nbsp;
-		</td>
-		<td align="right">
-		<sec:authorize access="hasRole('ANONYMOUS')">
-			<a href="/login"><s:message code="menu.login"/></a>&nbsp;&nbsp;
-			<a href="/register"><s:message code="menu.register"/></a>&nbsp;&nbsp;
-		</sec:authorize>
-		<sec:authorize access="isAuthenticated()">
-			<a href="/profil"><s:message code="menu.profil"/></a>
-			<a href="/logout"><s:message code="menu.logout"/></a>
-		</sec:authorize>
-		</td>
-	</tr>
-</table>
+<sec:authorize access="hasRole('ROLE_USER')">
+<%@include file="/WEB-INF/incl/menu_user.app" %>
+</sec:authorize>
+<sec:authorize access="hasRole('ROLE_ADMIN')">
+<%@include file="/WEB-INF/incl/menu_admin.app" %>
+</sec:authorize>

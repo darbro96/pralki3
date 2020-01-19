@@ -16,7 +16,7 @@ public class MainPageController {
         if (username == null)
             return "login";
         else
-            return "panel_new";
+            return "redirect:/panel";
     }
 
 }
