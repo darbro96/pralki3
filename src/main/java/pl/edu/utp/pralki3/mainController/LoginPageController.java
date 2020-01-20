@@ -14,6 +14,7 @@ public class LoginPageController {
         return "login";
     }
 
+    //testowe
     @GET
     @RequestMapping(value = "/karol")
     public String karol()
