@@ -18,6 +18,6 @@ public class LoginPageController {
     @RequestMapping(value = "/karol")
     public String karol()
     {
-        return "karol";
+        return "userPanel";
     }
 }
