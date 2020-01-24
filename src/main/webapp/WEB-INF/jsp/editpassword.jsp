@@ -17,17 +17,32 @@
 </head>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
-<div class="container text-center">
-    <h2>Zmiana hasła</h2>
-    <p><c:out value="${message}"/></p>
-    <sf:form id="usersForm" action="updatepass" modelAttribute="user" enctype="multipart/form-data" method="POST">
-        <sf:hidden path="email"/>
-        <p>Nowe hasło:&nbsp;&nbsp;<sf:password path="newPassword"/></p>
-        <font color="red"> <sf:errors path="newPassword"/></font>
-        <input type="submit" value="Zmiana hasła">
-        <input type="button" value="Rezygnacja"
-               onclick="window.location.href='${pageContext.request.contextPath}/profil'">
-    </sf:form>
-</div>
+<div class="container-fluid p-0">
+    <div class="row m-0">
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
+        <%@include file="/WEB-INF/incl/panel_admin.app" %>
+        <div class="col-sm-9 col-md-10   padm shadow bg-light" id="content">
+            </sec:authorize>
+            <sec:authorize access="hasRole('ROLE_USER')">
+            <div class="col-sm-9 col-md-12   padm shadow bg-light" id="content">
+                </sec:authorize>
+                <div class="p-1" id="title">
+                    <h2>Zmiana hasła</h2>
+                    <p><c:out value="${message}"/></p>
+                    <sf:form id="usersForm" action="updatepass" modelAttribute="user" enctype="multipart/form-data"
+                             method="POST">
+                        <sf:hidden path="email"/>
+                        <div id="tresc">
+                            <p>Nowe hasło:&nbsp;&nbsp;<sf:password path="newPassword" class="form-control"/></p>
+                        </div>
+                        <font color="red"> <sf:errors path="newPassword"/></font>
+                        <input type="submit" value="Zmiana hasła" class="btn btn-outline-primary">
+                        <input class="btn btn-outline-primary" type="button" value="Rezygnacja"
+                               onclick="window.location.href='${pageContext.request.contextPath}/profil'">
+                    </sf:form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

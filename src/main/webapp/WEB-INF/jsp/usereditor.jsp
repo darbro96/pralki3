@@ -7,88 +7,82 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/resources/css/administrationPanel.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <title>Edycja użytkownika</title>
 </head>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
+<div class="container-fluid p-0">
+    <div class="row m-0">
+        <%@include file="/WEB-INF/incl/panel_admin.app" %>
+        <div class="col-sm-9 col-md-10   padm shadow bg-light" id="content">
+            <div class="p-1" id="title">
+                <h2>Edycja użytkownika</h2>
 
-<h2>Edycja uzytkownika</h2>
-
-<p align="center">
-    <c:out value="${message }"/>
-</p>
-
-<sf:form id="usersForm" action="edit" modelAttribute="user"
-         enctype="multipart/form-data" method="POST">
-
-    <table width="500" border="0" cellpadding="4" cellspacing="1"
-           align="center">
-        <tr>
-            <td width="130" align="right">Id</td>
-            <td width="270" align="left"><sf:input path="idUser" size="28" id="name" disabled="true"/></td>
-        </tr>
-        <tr>
-            <td width="130" align="right"><s:message code="register.name"/></td>
-            <td width="270" align="left"><sf:input path="name" size="28" id="name"/></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><font color="red"><sf:errors path="name"/></font></td>
-        </tr>
-
-        <tr>
-            <td width="130" align="right"><s:message code="register.lastName"/></td>
-            <td width="270" align="left"><sf:input path="lastName" size="28"/></td>
-        </tr>
-
-        <tr>
-            <td colspan="2" align="center"><font color="red"><sf:errors path="lastName"/></font></td>
-        </tr>
-
-        <tr>
-            <td width="130" align="right"><s:message code="register.email"/></td>
-            <td width="270" align="left"><sf:input path="email" size="28"/></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><font color="red"><sf:errors path="email"/></font></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><font color="red"><sf:errors path="password"/></font></td>
-        </tr>
-
-        <tr>
-            <td width="130" align="right">Pokój:</td>
-            <td width="270" align="left"><sf:input path="numberOfRoom" size="28"/></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><font color="red"><sf:errors path="numberOfRoom"/></font></td>
-        </tr>
-
-        <tr>
-            <td width="130" align="right">Akademik</td>
-            <td width="270" align="left">
-                <sf:hidden path="nameOfRole"/>
-                <sf:select path="nameOfDormitory">
-                    <c:forEach var="o" items="${dorms}">
-                        <sf:option value="${o.name}" label="${o.name}" />
-                    </c:forEach>
-                </sf:select>
-            </td>
-        </tr>
-
-        <tr>
-            <td colspan="2" align="center" bgcolor="#fff">
-                <input type="submit" value="Zaktualizuj" class="formbutton"/>
-                <input type="button" value="<s:message code="button.cancel"/>" class="formbutton"
-                       onclick="window.location.href='${pageContext.request.contextPath}/users/1'"/>
-            </td>
-        </tr>
-
-    </table>
-
-</sf:form>
-
+                <p align="center">
+                    <c:out value="${message }"/>
+                </p>
+                <sf:form id="usersForm" action="edit" modelAttribute="user"
+                         enctype="multipart/form-data" method="POST">
+                    <div id="tresc">
+                        <sf:hidden path="idUser"/>
+                        <div class="form-group">
+                            <label for="imie">Imię:</label>
+                            <sf:input path="name" type="text" class="form-control" id="imie"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="nazwisko">Nazwisko:</label>
+                            <sf:input path="lastName" type="text" class="form-control" id="nazwisko"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="plec">Płeć:</label>
+                            <sf:select path="sex" class="form-control" id="plec">
+                                <sf:option value="K" label="Kobieta"/>
+                                <sf:option value="M" label="Mężczyzna"/>
+                            </sf:select>
+                        </div>
+                        <div class="form-group">
+                            <label for="nat">Narodowość:</label>
+                            <sf:select path="nationality" class="form-control" id="nat">
+                                <sf:option value="PL" label="Polska"/>
+                                <sf:option value="Z" label="Zagraniczny"/>
+                            </sf:select>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-mail:</label>
+                            <sf:input path="email" type="text" class="form-control" id="email"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="numberOfRoom">Pokój:</label>
+                            <sf:input path="numberOfRoom" type="text" class="form-control" id="numberOfRoom"/>
+                            <p class="text-danger"><sf:errors path="numberOfRoom"/></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="dorm">Akademik:</label>
+                            <sf:hidden path="nameOfRole"/>
+                            <sf:select path="nameOfDormitory" id="dorm" class="form-control">
+                                <c:forEach var="o" items="${dorms}">
+                                    <sf:option value="${o.name}" label="${o.name}"/>
+                                </c:forEach>
+                            </sf:select>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Zaktualizuj" class="form-control"/>
+                            <input type="button" value="<s:message code="button.cancel"/>" class="form-control"
+                                   onclick="window.location.href='${pageContext.request.contextPath}/panel'"/>
+                        </div>
+                    </div>
+                </sf:form>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

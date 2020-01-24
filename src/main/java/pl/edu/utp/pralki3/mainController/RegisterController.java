@@ -11,6 +11,7 @@ import pl.edu.utp.pralki3.entity.Dormitory;
 import pl.edu.utp.pralki3.entity.Role;
 import pl.edu.utp.pralki3.entity.Room;
 import pl.edu.utp.pralki3.entity.User;
+import pl.edu.utp.pralki3.model.UserUtilities;
 import pl.edu.utp.pralki3.service.DormitoryService;
 import pl.edu.utp.pralki3.service.RoleSerivce;
 import pl.edu.utp.pralki3.service.RoomService;
@@ -37,6 +38,8 @@ public class RegisterController {
     @GET
     @RequestMapping("/register")
     public String registerForm(Model model) {
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
         User user = new User();
         model.addAttribute("user", user);
         List<Dormitory> dormsList = dormitoryService.findAll();
@@ -55,14 +58,16 @@ public class RegisterController {
             bindingResult.rejectValue("email", "error.userEmailExist");
         }
         try {
-            Room room = roomService.findByNumber(user.getNumberOfRoom(), dormitoryService.findByName(user.getNameOfDormitory()));
-            if (userService.findUsersFromRoom(room).size() >= room.getCapacity()) {
-                bindingResult.rejectValue("numberOfRoom", "error.room");
+            if (!user.getNumberOfRoom().equals("") && user != null) {
+                Room room = roomService.findByNumber(user.getNumberOfRoom(), dormitoryService.findByName(user.getNameOfDormitory()));
+                if (userService.findUsersFromRoom(room).size() >= room.getCapacity()) {
+                    bindingResult.rejectValue("numberOfRoom", "error.room");
+                }
             }
         } catch (NoSuchElementException ex) {
             bindingResult.rejectValue("numberOfRoom", "error.room");
         }
-            if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             returnPage = "register";
         } else {
             userService.saveUser(user);

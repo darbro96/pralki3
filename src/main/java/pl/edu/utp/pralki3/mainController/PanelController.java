@@ -40,10 +40,9 @@ public class PanelController {
     public String showPanel(Model model, @RequestParam(required = false) String washer) {
         String username = UserUtilities.getLoggedUser();
         User user = userService.findUserByEmail(username);
-        model.addAttribute("user", user);
+        model.addAttribute("loggedUser", user);
         if (user.getRoles().iterator().next().getIdRole() == roleSerivce.findByRole("ROLE_user").getIdRole()) {
-            List<Washer> washers = washerService.findAll();
-            washers = washers.stream().filter(w -> w.getLaundry().getDormitory().getIdDormitory() == user.getDormitory().getIdDormitory()).collect(Collectors.toList());
+            List<Washer> washers = washerService.getWashersToUser(user);
             model.addAttribute("washers", washers);
             model.addAttribute("message","Wybierz pralkę");
             if (washer != null) {

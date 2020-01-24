@@ -10,7 +10,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="resources/css/administrationPanel.css" type="text/css">
+    <link rel="stylesheet" href="/resources/css/administrationPanel.css" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -18,98 +18,85 @@
 </head>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
+<div class="container-fluid p-0">
+    <div class="row m-0">
+        <%@include file="/WEB-INF/incl/panel_admin.app" %>
+        <div class="col-sm-9 col-md-10   padm shadow bg-light" id="content">
+            <div class="p-1" id="title">
 
-<h2><s:message code="menu.register"/></h2>
+                <h2><s:message code="menu.register"/></h2>
 
-<p align="center">
-    <c:out value="${message }"/>
-</p>
+                <p align="center">
+                    <c:out value="${message }"/>
+                </p>
 
-<sf:form id="usersForm" action="adduser" modelAttribute="user"
-         enctype="multipart/form-data" method="POST">
+                <sf:form id="usersForm" action="adduser" modelAttribute="user"
+                         enctype="multipart/form-data" method="POST">
 
-    <table width="500" border="0" cellpadding="4" cellspacing="1"
-           align="center">
+                <div id="tresc">
+                    <div class="form-group">
+                        <label for="usr">Imię:</label>
+                        <sf:input path="name" type="text" class="form-control" id="usr"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="lName">Nazwisko:</label>
+                        <sf:input path="lastName" type="text" class="form-control" id="lName"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="plec">Płeć:</label>
+                        <sf:select path="sex" class="form-control" id="plec">
+                            <sf:option value="K" label="Kobieta" />
+                            <sf:option value="M" label="Mężczyzna" />
+                        </sf:select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nat">Narodowość:</label>
+                        <sf:select path="nationality" class="form-control" id="nat">
+                            <sf:option value="PL" label="Polska" />
+                            <sf:option value="Z" label="Zagraniczny" />
+                        </sf:select>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mail:</label>
+                        <sf:input path="email" type="text" class="form-control" id="email"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Hasło:</label>
+                        <sf:input path="password" type="text" class="form-control" id="password"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="akademik">Akademik:</label>
+                        <sf:select path="nameOfDormitory" class="form-control" id="akademik">
+                            <c:forEach var="o" items="${dorms}">
+                                <sf:option value="${o.name}" label="${o.name}"/>
+                            </c:forEach>
+                        </sf:select>
+                    </div>
+                    <div class="form-group">
+                        <label for="room">Pokój:</label>
+                        <sf:input path="numberOfRoom" type="text" class="form-control" id="room"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="rola">Rola:</label>
+                        <sf:select path="nameOfRole" id="rola" class="form-control">
+                            <sf:option value="NONE" label="--- Wybierz ---"/>
+                            <c:forEach var="o" items="${roles}">
+                                <sf:option value="${o.role}" label="${o.role}"/>
+                            </c:forEach>
+                        </sf:select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="<s:message code="button.register"/>" class="form-control"/>
+                        <input type="button" value="<s:message code="button.cancel"/>" class="form-control"
+                               onclick="window.location.href='${pageContext.request.contextPath}/'"/>
+                    </div>
 
-        <tr>
-            <td width="130" align="right"><s:message code="register.name"/></td>
-            <td width="270" align="left"><div class="form-group">
-                <label for="usr">Name:</label>
-                <input type="text" class="form-control" id="usr">
-            </div></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><font color="red"><sf:errors path="name"/></font></td>
-        </tr>
-
-        <tr>
-            <td width="130" align="right"><s:message code="register.lastName"/></td>
-            <td width="270" align="left"><sf:input path="lastName" size="28"/></td>
-        </tr>
-
-        <tr>
-            <td colspan="2" align="center"><font color="red"><sf:errors path="lastName"/></font></td>
-        </tr>
-
-        <tr>
-            <td width="130" align="right"><s:message code="register.email"/></td>
-            <td width="270" align="left"><sf:input path="email" size="28"/></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><font color="red"><sf:errors path="email"/></font></td>
-        </tr>
-
-        <tr>
-            <td width="130" align="right"><s:message code="register.password"/></td>
-            <td width="270" align="left"><sf:password path="password" size="28"/></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><font color="red"><sf:errors path="password"/></font></td>
-        </tr>
-
-        <tr>
-            <td width="130" align="right">Akademik</td>
-            <td width="270" align="left">
-                <sf:select path="nameOfDormitory">
-                    <c:forEach var="o" items="${dorms}">
-                        <sf:option value="${o.name}" label="${o.name}" />
-                    </c:forEach>
-                </sf:select>
-            </td>
-        </tr>
-
-        <tr>
-            <td width="130" align="right">Pokój:</td>
-            <td width="270" align="left"><sf:input path="numberOfRoom" size="28"/></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><font color="red"><sf:errors path="numberOfRoom"/></font></td>
-        </tr>
-
-        <tr>
-            <td width="130" align="right">Rola</td>
-            <td width="270" align="left">
-                <sf:select path="nameOfRole">
-                    <sf:option value="NONE" label="--- Wybierz ---"/>
-                    <c:forEach var="o" items="${roles}">
-                        <sf:option value="${o.role}" label="${o.role}" />
-                    </c:forEach>
-                </sf:select>
-            </td>
-        </tr>
-
-        <tr>
-            <td colspan="2" align="center" bgcolor="#fff">
-                <input type="submit" value="<s:message code="button.register"/>" class="formbutton"/>
-                <input type="button" value="<s:message code="button.cancel"/>" class="formbutton"
-                       onclick="window.location.href='${pageContext.request.contextPath}/'"/>
-            </td>
-        </tr>
-
-    </table>
-
-</sf:form>
-
+                    </sf:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

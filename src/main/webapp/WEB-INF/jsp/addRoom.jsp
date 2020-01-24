@@ -7,32 +7,61 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/resources/css/administrationPanel.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <title>Dodaj pokój</title>
 </head>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
-<h2>Dodawanie nowego pokoju</h2>
-<c:out value="${message }"/>
-<sf:form id="usersForm" action="addroomaction" modelAttribute="room" enctype="multipart/form-data" method="POST">
-    Numer: <sf:input path="number"/><br>
-    <font color="red"><sf:errors path="number"/></font><br>
-    Typ pokoju:
-    <sf:select path="idRoomType">
-        <c:forEach var="o" items="${roomTypes}">
-            <sf:option value="${o.idRoomType}" label="${o.type}"/>
-        </c:forEach>
-    </sf:select><br>
-    Akademik:
-    <sf:select path="nameOfDormitory">
-        <c:forEach var="o" items="${dormitories}">
-            <sf:option value="${o.name}" label="${o.name}"/>
-        </c:forEach>
-    </sf:select><br>
-    Pojemność pokoju: <sf:input path="capacity"/><br>
-    <input type="submit" value="Dodaj" class="formbutton"/>
-    <input type="button" value="<s:message code="button.cancel"/>" class="formbutton"
-           onclick="window.location.href='${pageContext.request.contextPath}/panel'"/>
-</sf:form>
-<font color="red"><sf:errors path="name"/></font>
+
+<div class="container-fluid p-0">
+    <div class="row m-0">
+        <%@include file="/WEB-INF/incl/panel_admin.app" %>
+        <div class="col-sm-9 col-md-10   padm shadow bg-light" id="content">
+            <div class="p-1" id="title">
+                <h2>Dodawanie nowego pokoju</h2>
+                <p><c:out value="${message }"/></p>
+                <sf:form id="usersForm" action="addroomaction" modelAttribute="room" enctype="multipart/form-data"
+                         method="POST">
+                <div class="form-group">
+                    <label for="number">Numer pokoju:</label>
+                    <sf:input path="number" class="form-control" id="number"/>
+                    <font color="red"><sf:errors path="number"/></font>
+                </div>
+                <div class="form-group">
+                    <label for="roomType">Typ pokoju:</label>
+                    <sf:select path="idRoomType" class="form-control" id="roomType">
+                        <c:forEach var="o" items="${roomTypes}">
+                            <sf:option value="${o.idRoomType}" label="${o.type}"/>
+                        </c:forEach>
+                    </sf:select>
+                </div>
+                <div class="form-group">
+                    <label for="dorm">Akademik:</label>
+                    <sf:select path="nameOfDormitory" class="form-control" id="dorm">
+                        <c:forEach var="o" items="${dormitories}">
+                            <sf:option value="${o.name}" label="${o.name}"/>
+                        </c:forEach>
+                    </sf:select>
+                </div>
+                <div class="form-group">
+                    <label for="capacity">Pojemność pokoju:</label>
+                    <sf:input path="capacity" class="form-control" id="capacity"/>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Dodaj" class="form-control"/>
+                    <input type="button" value="<s:message code="button.cancel"/>" class="form-control"
+                           onclick="window.location.href='${pageContext.request.contextPath}/panel'"/>
+                </div>
+                </sf:form>
+                <font color="red"><sf:errors path="name"/></font>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

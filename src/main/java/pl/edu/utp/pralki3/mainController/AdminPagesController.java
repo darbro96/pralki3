@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import pl.edu.utp.pralki3.entity.*;
 import pl.edu.utp.pralki3.model.CardToUser;
 import pl.edu.utp.pralki3.model.UserUtilities;
@@ -232,6 +233,8 @@ public class AdminPagesController {
         model.addAttribute("dorms", dormsList);
         List<Role> roleList = roleSerivce.findAll();
         model.addAttribute("roles", roleList);
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
         return "usereditor";
     }
 
@@ -239,18 +242,34 @@ public class AdminPagesController {
     @RequestMapping(value = "/edituser/edit")
     public String editUserAction(User user, BindingResult bindingResult, Model model, Locale locale) {
         try {
-            Room room = roomService.findByNumber(user.getNumberOfRoom(), dormitoryService.findByName(user.getNameOfDormitory()));
-            if (userService.findUsersFromRoom(room).size() >= room.getCapacity()) {
-                bindingResult.rejectValue("numberOfRoom", "error.room");
+            Room room = null;
+            if (!user.getNumberOfRoom().equals("")) {
+                room = roomService.findByNumber(user.getNumberOfRoom(), dormitoryService.findByName(user.getNameOfDormitory()));
+                String number = user.getNumberOfRoom();
+                user.setDormitory(dormitoryService.findByName(user.getNameOfDormitory()));
+                if (!roomService.isResident(user, number)) {
+                    if (userService.findUsersFromRoom(room).size() >= room.getCapacity()) {
+                        bindingResult.rejectValue("numberOfRoom", "error.room");
+                    }
+                }
             }
         } catch (NoSuchElementException ex) {
             bindingResult.rejectValue("numberOfRoom", "error.room");
+        } catch (NullPointerException ex) {
+            bindingResult.rejectValue("numberOfRoom", "error.room");
         }
         if (bindingResult.hasErrors()) {
+            model.addAttribute("user", user);
+            List<Dormitory> dormsList = dormitoryService.findAll();
+            model.addAttribute("dorms", dormsList);
+            List<Role> roleList = roleSerivce.findAll();
+            model.addAttribute("roles", roleList);
+            User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+            model.addAttribute("loggedUser", loggedUser);
             return "usereditor";
         } else {
             userService.updateUser(user);
-            return "redirect:/users";
+            return "redirect:/panel";
         }
     }
 
@@ -259,7 +278,7 @@ public class AdminPagesController {
     public String deleteUser(@PathVariable("id") int idUser) {
         User user = userService.get(idUser);
         userService.deleteUser(user);
-        return "redirect:/users";
+        return "redirect:/deleteuser";
     }
 
     @GET
@@ -281,6 +300,8 @@ public class AdminPagesController {
     @GET
     @RequestMapping(value = "/assigncard/{id}")
     public String assignCardView(Model model, @PathVariable("id") int idUser) {
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
         User user = userService.get(idUser);
         CardToUser cardToUser = new CardToUser();
         cardToUser.setUsername(user.getEmail());
@@ -294,7 +315,7 @@ public class AdminPagesController {
     public String unassignCard(@PathVariable("id") int idUser) {
         User user = userService.get(idUser);
         userService.clearCardId(user);
-        return "redirect:/users";
+        return "redirect:/users2";
     }
 
     @POST
@@ -304,13 +325,15 @@ public class AdminPagesController {
         if (userService.checkCard(cardToUser.getCardId())) {
             user.setCardId(cardToUser.getCardId());
             userService.updateCardId(user);
-            return "redirect:/users";
+            return "redirect:/users2";
         } else {
             model.addAttribute("message", "Karta jest już przypisana do innego użytkownika!");
             cardToUser = new CardToUser();
             cardToUser.setUsername(user.getEmail());
             model.addAttribute("user", user);
             model.addAttribute("cardToUser", cardToUser);
+            User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+            model.addAttribute("loggedUser", loggedUser);
             return "assignCardForm";
         }
     }
@@ -320,11 +343,49 @@ public class AdminPagesController {
     public String addRoom(Model model) {
         List<Dormitory> dormitories = dormitoryService.findAll();
         model.addAttribute("dormitories", dormitories);
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
         Room room = new Room();
         model.addAttribute("room", room);
         List<RoomType> roomTypes = roomService.findAllTypes();
         model.addAttribute("roomTypes", roomTypes);
         return "addRoom";
+    }
+
+    @GET
+    @RequestMapping(value = "/editroom/{idRoom}")
+    public String editRoom(Model model, @PathVariable("idRoom") int idRoom) {
+        List<RoomType> roomTypes = roomService.findAllTypes();
+        model.addAttribute("roomTypes", roomTypes);
+        Room room = roomService.getById(idRoom);
+        room.setIdRoomType(room.getRoomType().getIdRoomType());
+        room.setNameOfDormitory(room.getDormitory().getName());
+        model.addAttribute("room", room);
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
+        List<Dormitory> dormitories = dormitoryService.findAll();
+        model.addAttribute("dormitories", dormitories);
+        return "editroom";
+    }
+
+    @POST
+    @RequestMapping("/editroomaction")
+    public String editRoomAction(Room room, BindingResult bindingResult, Model model, Locale locale) {
+        room.setDormitory(dormitoryService.findByName(room.getNameOfDormitory()));
+        room.setRoomType(roomService.getRoomTypeById(room.getIdRoomType()));
+        roomService.updateRoom(room);
+        return "redirect:/roomsByFloor";
+    }
+
+    @POST
+    @RequestMapping("/searchroombycard")
+    public String searchRoomByCard(Room room, BindingResult bindingResult, Model model, Locale locale) {
+        try {
+            Room result = roomService.getByCardId(room.getIdCard());
+            return "redirect:/editroom/" + result.getIdRoom();
+        } catch (NullPointerException ex) {
+            return "redirect:/roomsByFloor";
+        }
     }
 
     @POST
@@ -341,6 +402,8 @@ public class AdminPagesController {
             bindingResult.rejectValue("number", "error.roomExist");
         }
         if (bindingResult.hasErrors()) {
+            User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+            model.addAttribute("loggedUser", loggedUser);
             List<Dormitory> dormitories = dormitoryService.findAll();
             model.addAttribute("dormitories", dormitories);
             room = new Room();
@@ -358,7 +421,138 @@ public class AdminPagesController {
     @RequestMapping("/users2")
     public String newVersionUsers(Model model) {
         User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
-        model.addAttribute("user", user);
+        model.addAttribute("loggedUser", user);
         return "users_new";
+    }
+
+    @GET
+    @RequestMapping("/checkout")
+    public String checkOutView(Model model) {
+        User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", user);
+        return "checkOutUser";
+    }
+
+    @GET
+    @RequestMapping("/checkout/{idUser}")
+    public String checkOutAction(@PathVariable("idUser") String idUser) {
+        User user = userService.get(Integer.parseInt(idUser));
+        userService.checkOut(user);
+        return "redirect:/checkout";
+    }
+
+    @GET
+    @RequestMapping("/deleteuser")
+    public String deleteUserView(Model model) {
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
+        return "deleteuser";
+    }
+
+    @GET
+    @RequestMapping("/checkin")
+    public String checkInView(Model model) {
+        User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", user);
+        return "checkInUser";
+    }
+
+    @GET
+    @RequestMapping("/checkin/{idUser}")
+    public String checkInForm(Model model, @PathVariable("idUser") int idUser) {
+        User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", user);
+        user = userService.get(idUser);
+        model.addAttribute("user", user);
+        List<Room> rooms = roomService.adjustRoomToUser(user);
+        model.addAttribute("rooms", rooms);
+        return "checkInForm";
+    }
+
+    @POST
+    @RequestMapping("/checkinaction")
+    public String checkInAction(User user, BindingResult bindingResult, Model model, Locale locale) {
+        User userFromDatabase = userService.get(user.getIdUser());
+        Room room = null;
+        try {
+            if (!user.getNumberOfRoom().equals("")) {
+                room = roomService.findByNumber(user.getNumberOfRoom(), dormitoryService.findByName(user.getDormitory().getName()));
+                String number = user.getNumberOfRoom();
+                user.setDormitory(dormitoryService.findByName(user.getNameOfDormitory()));
+                if (!roomService.isResident(user, number)) {
+                    if (userService.findUsersFromRoom(room).size() >= room.getCapacity()) {
+                        bindingResult.rejectValue("numberOfRoom", "error.room");
+                    }
+                }
+            }
+        } catch (NoSuchElementException ex) {
+            bindingResult.rejectValue("numberOfRoom", "error.room");
+        } catch (NullPointerException ex) {
+            bindingResult.rejectValue("numberOfRoom", "error.room");
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("user", user);
+            User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+            model.addAttribute("loggedUser", loggedUser);
+            return "checkInForm";
+        } else {
+            userService.checkIn(userFromDatabase, room);
+            return "redirect:/panel";
+        }
+    }
+
+    @GET
+    @RequestMapping("managewashers")
+    public String manageWashers(Model model) {
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
+        return "managewashers";
+    }
+
+    @GET
+    @RequestMapping("blockwasher/{idWasher}")
+    public String blockWasher(@PathVariable("idWasher") int idWasher) {
+        Washer washer = washerService.get(idWasher);
+        washerService.setUnavailable(washer);
+        return "redirect:/managewashers";
+    }
+
+    @GET
+    @RequestMapping("unlockwasher/{idWasher}")
+    public String unlockWasher(@PathVariable("idWasher") int idWasher) {
+        Washer washer = washerService.get(idWasher);
+        washerService.setAvailable(washer);
+        return "redirect:/managewashers";
+    }
+
+    @GET
+    @RequestMapping("editwasher/{idWasher}")
+    public String editWasher(@PathVariable("idWasher") int idWasher, Model model) {
+        Washer washer = washerService.get(idWasher);
+        washer.setIdOfLaundry(washer.getLaundry().getIdLaundry());
+        model.addAttribute("washer", washer);
+        return "editwasher";
+    }
+
+    @POST
+    @RequestMapping("/editwasheraction")
+    public String editWasherAction(Washer washer, BindingResult bindingResult, Model model, Locale locale) {
+        Washer washerFromDatabase = washerService.get(washer.getIdWasher());
+        washerService.updateNumberOfWasher(washerFromDatabase);
+        return "redirect:/editwasher";
+    }
+
+    @GET
+    @RequestMapping("/roomsByFloor")
+    public String roomsByFloorView(Model model, @RequestParam(required = false) boolean error) {
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
+        Room room = new Room();
+        model.addAttribute("room", room);
+        if(error)
+        {
+            model.addAttribute("message","Nie znaleziono pokoju ze wskazanym identyfikatorem klucza!");
+        }
+        return "roomsFromFloor";
     }
 }

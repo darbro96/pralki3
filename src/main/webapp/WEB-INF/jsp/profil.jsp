@@ -16,86 +16,73 @@
 </head>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
-<div class="container text-center">
-    <h1>Twój profil</h1><br>
-    <%--    <p>E-mail:&nbsp;&nbsp;<b><c:out value="${user.email}"/> </b></p>--%>
-    <%--    <p>Imię:&nbsp;&nbsp;<b><c:out value="${user.name}"/> </b></p>--%>
-    <%--    <p>Nazwisko:&nbsp;&nbsp;<b><c:out value="${user.lastName}"/> </b></p>--%>
-    <%--    <p>Czy aktywny?&nbsp;&nbsp;--%>
-    <%--        <c:choose>--%>
-    <%--            <c:when test="${user.active==1}"><font color="green">TAK</font></c:when>--%>
-    <%--            <c:otherwise><font color="green">NIE</font></c:otherwise>--%>
-    <%--        </c:choose>--%>
-    <%--    </p>--%>
-    <%--    <p>Rola:&nbsp;&nbsp;--%>
-    <%--        <c:choose>--%>
-    <%--            <c:when test="${user.nrRoli==1}">Administrator</c:when>--%>
-    <%--            <c:otherwise>Użytkownik</c:otherwise>--%>
-    <%--        </c:choose>--%>
-    <%--    </p>--%>
-    <%--    <p>Akademik:--%>
-    <%--        <c:choose>--%>
-    <%--            <c:when test="${user.dormitory.name==null}">Nie zdefiniowano</c:when>--%>
-    <%--            <c:otherwise><c:out value="${user.dormitory.name}"/> </c:otherwise>--%>
-    <%--        </c:choose>--%>
-    <%--    </p>--%>
-    <%--    <p>--%>
-    <%--        <c:if test="${user.room!=null}">--%>
-    <%--            Pokój: ${user.room.number}--%>
-    <%--        </c:if>--%>
-    <%--    </p>--%>
-
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <tbody>
-                <tr>
-                    <td>E-mail</td>
-                    <td><b><c:out value="${user.email}"/> </b></td>
-                </tr>
-                <tr>
-                    <td>Imię</td>
-                    <td><b><c:out value="${user.name}"/> </b></td>
-                </tr>
-                <tr>
-                    <td>Nazwisko</td>
-                    <td><b><c:out value="${user.lastName}"/></td>
-                </tr>
-                <tr>
-                    <td>Rola</td>
-                    <td>
-                        <b>
-                            <c:choose>
-                                <c:when test="${user.nrRoli==1}">Administrator</c:when>
-                                <c:otherwise>Użytkownik</c:otherwise>
-                            </c:choose>
-                        </b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Akademik</td>
-                    <td>
-                        <b>
-                            <c:choose>
-                                <c:when test="${user.dormitory.name==null}">Nie zdefiniowano</c:when>
-                                <c:otherwise><c:out value="${user.dormitory.name}"/> </c:otherwise>
-                            </c:choose>
-                        </b>
-                    </td>
-                    </td>
-                </tr>
-                <c:if test="${user.room!=null}">
-                    <tr>
-                        <td>Pokój:</td>
-                        <td><b>${user.room.number}</b></td>
-                    </tr>
-                </c:if>
-                </tbody>
-            </table>
-            <p>
-                <button onclick="window.location.href='${pageContext.request.contextPath}/editpassword'">Zmiana hasła
-                </button>
-            </p>
+<div class="container-fluid p-0">
+    <div class="row m-0">
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
+        <%@include file="/WEB-INF/incl/panel_admin.app" %>
+            <div class="col-sm-9 col-md-10   padm shadow bg-light" id="content">
+        </sec:authorize>
+            <sec:authorize access="hasRole('ROLE_USER')">
+            <div class="col-sm-9 col-md-12   padm shadow bg-light" id="content">
+                </sec:authorize>
+            <div class="p-1" id="title">
+                <h1>Twój profil</h1>
+                <br>
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <td>E-mail</td>
+                                <td><b><c:out value="${loggedUser.email}"/> </b></td>
+                            </tr>
+                            <tr>
+                                <td>Imię</td>
+                                <td><b><c:out value="${loggedUser.name}"/> </b></td>
+                            </tr>
+                            <tr>
+                                <td>Nazwisko</td>
+                                <td><b><c:out value="${loggedUser.lastName}"/></td>
+                            </tr>
+                            <tr>
+                                <td>Rola</td>
+                                <td>
+                                    <b>
+                                        <c:choose>
+                                            <c:when test="${loggedUser.nrRoli==1}">Administrator</c:when>
+                                            <c:otherwise>Użytkownik</c:otherwise>
+                                        </c:choose>
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Akademik</td>
+                                <td>
+                                    <b>
+                                        <c:choose>
+                                            <c:when test="${loggedUser.dormitory.name==null}">Nie zdefiniowano</c:when>
+                                            <c:otherwise><c:out value="${loggedUser.dormitory.name}"/> </c:otherwise>
+                                        </c:choose>
+                                    </b>
+                                </td>
+                                </td>
+                            </tr>
+                            <c:if test="${loggedUser.room!=null}">
+                                <tr>
+                                    <td>Pokój:</td>
+                                    <td><b>${loggedUser.room.number}</b></td>
+                                </tr>
+                            </c:if>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <p>
+                    <button class="btn btn-outline-primary"
+                            onclick="window.location.href='${pageContext.request.contextPath}/editpassword'">Zmiana hasła
+                    </button>
+                </p>
+            </div>
         </div>
     </div>
 </div>

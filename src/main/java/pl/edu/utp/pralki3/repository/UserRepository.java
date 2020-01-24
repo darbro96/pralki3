@@ -35,6 +35,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void updateDormitory(@Param("dormitory") Dormitory dormitory, @Param("email") String email);
 
     @Modifying
+    @Query(value = "DELETE FROM reservation WHERE user_id=:userId", nativeQuery = true)
+    void deleteReservationOfUser(@Param("userId") int userId);
+
+    @Modifying
     @Query(value = "DELETE FROM user_role WHERE user_id=:userId", nativeQuery = true)
     void deleteFromUserRole(@Param("userId") int userId);
 
@@ -51,6 +55,18 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void clearCardId(@Param("email") String email);
 
     @Modifying
-    @Query(value = "UPDATE User  u SET u.room.idRoom= :idRoom WHERE u.email= :email")
+    @Query(value = "UPDATE User u SET u.room.idRoom= :idRoom WHERE u.email= :email")
     void updateRoom(@Param("idRoom") int idRoom, @Param("email") String email);
+
+    @Modifying
+    @Query(value = "UPDATE User u SET u.room.idRoom= NULL WHERE u.email= :email")
+    void updateRoomSetNull(@Param("email") String email);
+
+    @Modifying
+    @Query(value = "UPDATE User u SET u.email= :email WHERE u.idUser= :id")
+    void updateMail(@Param("email") String email, @Param("id") int id);
+
+    @Modifying
+    @Query(value = "UPDATE User u SET u.password= :newPassword WHERE u.email= :email")
+    void updatePassword(@Param("newPassword") String password, @Param("email") String email);
 }

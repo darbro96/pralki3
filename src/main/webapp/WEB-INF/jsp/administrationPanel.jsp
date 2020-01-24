@@ -18,20 +18,7 @@
 <%@include file="/WEB-INF/incl/menu.app" %>
 <div class="container-fluid p-0" >
     <div class="row m-0">
-        <div class="col-sm-2 padm shadow bg-nav2">
-
-            <nav class="nav flex-column grey lighten-4 py-4 font-weight-bold">
-                Mieszkańcy
-                <a class="nav-link active" href="/users2">Wyszukaj</a>
-                <a class="nav-link" href="register">Dodaj</a>
-                <a class="nav-link" href="#">Wymelduj</a>
-                <a class="nav-link" href="#">Przenieś</a>
-                <a class="nav-link" href="#">Usuń</a>
-                <br>Pranie
-                <a class="nav-link" href="#">Podgląd</a>
-                <a class="nav-link" href="#">Zarządzaj</a>
-            </nav>
-        </div>
+        <%@include file="/WEB-INF/incl/panel_admin.app" %>
         <div class="col-sm-10 padm shadow bg-light" id="content">
             <div class="p-1" id="title">
                 <h1>Panel główny</h1>

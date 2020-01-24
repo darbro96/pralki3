@@ -7,11 +7,13 @@ import pl.edu.utp.pralki3.entity.User;
 import pl.edu.utp.pralki3.entity.Washer;
 import pl.edu.utp.pralki3.repository.WasherRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class WasherService {
     @Autowired
     private WasherRepository washerRepository;
@@ -34,7 +36,24 @@ public class WasherService {
 
     public List<Washer> getWashersToUser(User user) {
         List<Washer> washers = findAll();
-        washers = washers.stream().filter(w -> w.getLaundry().getDormitory().getIdDormitory() == user.getDormitory().getIdDormitory()).collect(Collectors.toList());
+        washers = washers.stream().filter(w->w.isAvailable()).filter(w -> w.getLaundry().getDormitory().getIdDormitory() == user.getDormitory().getIdDormitory()).collect(Collectors.toList());
         return washers;
+    }
+
+    public List<Washer> getWashersFromLaundry(Laundry laundry) {
+        return findAll().stream().filter(w -> w.getLaundry().getIdLaundry() == laundry.getIdLaundry()).collect(Collectors.toList());
+    }
+
+    public void setAvailable(Washer washer) {
+        washerRepository.setAvailable(washer.getIdWasher());
+    }
+
+    public void setUnavailable(Washer washer) {
+        washerRepository.setUnavailable(washer.getIdWasher());
+    }
+
+    public void updateNumberOfWasher(Washer washer)
+    {
+        washerRepository.updateNumberOfWasher(washer.getNumberWasher(), washer.getIdWasher());
     }
 }

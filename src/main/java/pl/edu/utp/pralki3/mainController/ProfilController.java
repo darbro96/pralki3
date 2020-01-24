@@ -25,7 +25,7 @@ public class ProfilController {
         User user = userService.findUserByEmail(username);
         int nrRoli = user.getRoles().iterator().next().getIdRole();
         user.setNrRoli(nrRoli);
-        model.addAttribute("user", user);
+        model.addAttribute("loggedUser", user);
         return "profil";
     }
 
@@ -34,6 +34,7 @@ public class ProfilController {
     public String editUserPassword(Model model) {
         String username = UserUtilities.getLoggedUser();
         User user = userService.findUserByEmail(username);
+        model.addAttribute("loggedUser", user);
         model.addAttribute("user", user);
         return "editpassword";
     }

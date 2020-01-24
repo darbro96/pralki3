@@ -9,7 +9,7 @@
     <title>Pralki</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/resources/css/administrationPanel.css" type="text/css">
+    <link rel="stylesheet" href="resources/css/administrationPanel.css" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -23,11 +23,11 @@
         <%@include file="/WEB-INF/incl/panel_admin.app" %>
         <div class="col-sm-9 col-md-10   padm shadow bg-light" id="content">
             <div class="p-1" id="title">
-                <h1>Użytkownicy</h1>
+                <h1>Usuń użytkownika</h1>
 
                 <br>
                 <div class="card">
-                    <div class="card-header"><h5>Wyszukaj użytkownika <span
+                    <div class="card-header"><h5>Wyszukaj użytkownika do usunięcia <span
                             class="badge badge-warning"> ! </span><br><input type="text" ng-model="par"
                                                                              ng-change="search()"/></h5></div>
                     <div class="card-body">
@@ -54,19 +54,8 @@
                                     <td>{{u.cardId}}</td>
                                     <td>
                                         <button ng-click="editUser(u.idUser)" class="btn btn-outline-primary">
-                                            Edytuj
+                                            Usuń
                                         </button>&nbsp;
-                                        <button ng-click="assignCard(u.idUser)" class="btn btn-outline-primary"
-                                                ng-show="u.cardId==null">
-                                            Przypisz kartę
-                                        </button>
-                                        <button ng-click="unassignCard(u.idUser)" class="btn btn-outline-primary"
-                                                ng-show="u.cardId!=null">
-                                            Usuń kartę
-                                        </button>
-                                        <button ng-click="resetPassword(u.idUser)" class="btn btn-outline-primary">
-                                            Resetuj hasło
-                                        </button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -85,22 +74,14 @@
 
 <script src="resources/js/angularjs/1.7.9/angular.min.js"></script>
 <script>
-    angular.module('pralki', []).controller('usersContr', function ($scope, $http, $location) {
-        $scope.vUsers = [];
+    angular.module('pralki', [  ]).controller('usersContr', function ($scope, $http, $location) {
+        $scope.vUsers=[];
         $http.get("/api/users").then(function (value) {
             $scope.users = value.data;
         });
 
         $scope.editUser = function (idUser) {
-            window.location.href = '${pageContext.request.contextPath}/edituser/' + idUser;
-        };
-
-        $scope.assignCard = function (idUser) {
-            window.location.href = '${pageContext.request.contextPath}/assigncard/' + idUser;
-        };
-
-        $scope.unassignCard = function (idUser) {
-            window.location.href = '${pageContext.request.contextPath}/unassigncard/' + idUser;
+            window.location.href = '${pageContext.request.contextPath}/deleteuser/' + idUser;
         };
 
         $scope.search = function () {
@@ -127,16 +108,6 @@
                 $scope.vUsers = [];
             }
         };
-
-        $scope.resetPassword = function (id) {
-            $http.post("/api/resetpassword/" + id).then(function (value) {
-                console.log("Success", "Mail sent");
-            }), function (err) {
-                console.log("Error", err);
-            }
-        };
-
-
     });
 </script>
 </body>

@@ -18,6 +18,9 @@ public class Washer {
     @Column(name = "number_washer")
     @NotNull
     private String numberWasher;
+    @Column(name = "available")
+    @NotNull
+    private boolean available;
     @ManyToOne
     @JoinColumn(name = "id_laundry")
     private Laundry laundry;

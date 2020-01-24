@@ -35,7 +35,7 @@ public class ReservationController {
     @RequestMapping("/bookwasher")
     public String showBookForm(Model model) {
         User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
-        model.addAttribute("user", user);
+        model.addAttribute("loggedUser", user);
         List<Washer> washers = washerService.getWashersToUser(user);
         model.addAttribute("washers", washers);
         LocalDateTime today = LocalDateTime.now();
@@ -118,7 +118,7 @@ public class ReservationController {
             }
         }
         User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
-        model.addAttribute("user", user);
+        model.addAttribute("loggedUser", user);
         List<Reservation> reservations = reservationService.findByUserTodayOrLater(user);
         model.addAttribute("reservations", reservations);
         return "reservations";

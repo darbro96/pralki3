@@ -28,6 +28,12 @@ public class User {
     @Column(name = "last_name")
     @NotNull
     private String lastName;
+    @Column(name = "sex")
+    @NotNull
+    private String sex;
+    @Column(name = "nationality")
+    @NotNull
+    private String nationality;
     @Column(name = "active")
     @NotNull
     private int active;

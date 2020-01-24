@@ -20,7 +20,7 @@
 <h1>Rezerwacja pralki</h1>
 <p><font color="red"><sf:errors path="start"/><c:out value="${message }"/></font> </p>
 <sf:form  id="usersForm" action="bookwasheraction" modelAttribute="reservation" enctype="multipart/form-data" method="POST">
-    <sf:hidden path="username" value="${user.email}"/>
+    <sf:hidden path="username" value="${loggedUser.email}"/>
     Krok 1. Wybierz datę.<br>
     <img src="resources/img/kal.png"><sf:input type="date" path="dateStart" min="${today}" max="${max}"/> Maksymalnie 8 dni później<br>
     Krok 2. Wybierz godzinę<br>

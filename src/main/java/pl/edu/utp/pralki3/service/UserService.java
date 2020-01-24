@@ -12,6 +12,7 @@ import pl.edu.utp.pralki3.repository.RoleRepository;
 import pl.edu.utp.pralki3.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -72,13 +73,17 @@ public class UserService {
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         user.setDormitory(dormitoryService.findByName(user.getNameOfDormitory()));
         user.setRoom(roomService.findByNumber(user.getNumberOfRoom(), user.getDormitory()));
+        userRepository.updateMail(user.getEmail(), user.getIdUser());
         userRepository.updateName(user.getName(), user.getEmail());
         userRepository.updateLastName(user.getLastName(), user.getEmail());
         userRepository.updateDormitory(user.getDormitory(), user.getEmail());
-        userRepository.updateRoom(user.getRoom().getIdRoom(), user.getEmail());
+        if (user.getRoom() != null) {
+            userRepository.updateRoom(user.getRoom().getIdRoom(), user.getEmail());
+        }
     }
 
     public void deleteUser(User user) {
+        userRepository.deleteReservationOfUser(user.getIdUser());
         userRepository.deleteFromUserRole(user.getIdUser());
         userRepository.deleteFromUser(user.getIdUser());
     }
@@ -116,6 +121,21 @@ public class UserService {
     }
 
     public List<User> findUsersFromRoom(Room room) {
-        return findAll().stream().filter(u -> u.getRoom() != null && u.getRoom().getIdRoom() == room.getIdRoom()).collect(Collectors.toList());
+        if (room == null)
+            return new ArrayList<>();
+        else
+            return findAll().stream().filter(u -> u.getRoom() != null && u.getRoom().getIdRoom() == room.getIdRoom()).collect(Collectors.toList());
+    }
+
+    public void checkOut(User user) {
+        userRepository.updateRoomSetNull(user.getEmail());
+    }
+
+    public List<User> getUsersFromRoom(Room room) {
+        return findAll().stream().filter(u -> u.getRoom() != null).filter(u -> u.getRoom().getIdRoom() == room.getIdRoom()).collect(Collectors.toList());
+    }
+
+    public void checkIn(User user, Room room) {
+        userRepository.updateRoom(room.getIdRoom(), user.getEmail());
     }
 }

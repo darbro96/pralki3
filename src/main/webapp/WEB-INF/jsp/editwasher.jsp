@@ -14,41 +14,37 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <title>Przypisywanie karty</title>
+    <title>Edycja użytkownika</title>
 </head>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
-
 <div class="container-fluid p-0">
     <div class="row m-0">
         <%@include file="/WEB-INF/incl/panel_admin.app" %>
         <div class="col-sm-9 col-md-10   padm shadow bg-light" id="content">
             <div class="p-1" id="title">
-                <h2>Przypisywanie karty do użytkownika</h2>
-                <p>
-                    Imię: ${user.name}<br>
-                    Nazwisko: ${user.lastName}
-                </p>
+                <h2>Edycja pralki</h2>
+                <sf:form id="usersForm" action="editwasheraction" modelAttribute="washer" enctype="multipart/form-data" method="POST">
                 <div id="tresc">
-                <sf:form id="usersForm" action="/assigncardaction" modelAttribute="cardToUser"
-                         enctype="multipart/form-data" method="POST">
-                    <sf:hidden path="username"/>
                     <div class="form-group">
-                        <label for="cardId">Przyłóż karę do czytnika</label>
-                        <sf:input path="cardId" type="text" class="form-control" id="cardId"/>
+                        <label for="idWasher">Id:</label>
+                        <sf:input path="idWasher" type="text" class="form-control" id="idWasher" disabled="true"/>
+                        <sf:hidden path="idOfLaundry" />
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="<s:message code="button.register"/>" class="form-control"/>
+                        <label for="numberWasher">Numer pralki:</label>
+                        <sf:input path="numberWasher" type="text" class="form-control" id="numberWasher"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Zaktualizuj" class="form-control"/>
                         <input type="button" value="<s:message code="button.cancel"/>" class="form-control"
-                               onclick="window.location.href='${pageContext.request.contextPath}/'"/>
+                               onclick="window.location.href='${pageContext.request.contextPath}/panel'"/>
                     </div>
-                    <p class="text-danger text-center"><c:out value="${message}"/></p>
-                </sf:form>
                 </div>
+                </sf:form>
             </div>
         </div>
     </div>
 </div>
-
 </body>
 </html>

@@ -46,6 +46,9 @@
                     <img src="resources/img/logo_header.png" class="img-fluid mx-auto d-block">
                 </div>
                 <div class="card-body">
+                    <c:if test="${not empty param.error}">
+                        <p class="text-danger text-center"><s:message code="error.logowanie"/></p>
+                    </c:if>
                     <div class="form-group">
                         <label>Login:</label>
                         <input type="email" name="email" required class="form-control" />
