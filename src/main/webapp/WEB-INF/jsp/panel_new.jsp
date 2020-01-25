@@ -26,44 +26,45 @@
             </button>
         </p>
         <p>Podgląd aktualnego rozkładu rezerwacji</p>
-        <div class="btn-group ml-auto">
+            <div class="btn-group ml-auto">
             <c:forEach var="w" items="${washers}">
                 <button type="button" class="btn btn-primary"
                         onclick="window.location.href='${pageContext.request.contextPath}/panel?washer=${w.idWasher}'">
                     Pralka nr <c:out value="${w.numberWasher}"/> (pralnia <c:out value="${w.laundry.numberLaundry}"/>)
                 </button>
-                &nbsp;
             </c:forEach>
         </div>
-        <p><c:out value="${message}"/></p>
-        <c:set var="timetable" value="0"/>
-        <c:set var="sr" value="0"/>
-        <c:set var="size" value="${timetables.size()-1}"/>
+            <p><c:out value="${message}"/></p>
+            <c:set var="timetable" value="0"/>
+            <c:set var="sr" value="0"/>
+            <c:set var="size" value="${timetables.size()-1}"/>
         <br><br>
-        <table border="1">
-            <tr>
-                <td></td>
-                <c:forEach var="t" items="${timetables}">
-                    <td><b>${t.day}</b></td>
-                </c:forEach>
-            </tr>
-            <c:set var="t" value="${timetables.get(timetable)}"/>
-            <c:forEach var="h" items="${hours}">
+        <div class="table-responsive">
+            <table class="table-bordered w-75">
                 <tr>
-                    <td>${h}</td>
-                    <c:forEach var="tm" items="${timetables}">
-                        <td bgcolor="${t.specialReservations.get(sr).color}"></td>
-                        <c:if test="${timetable<size}">
-                            <c:set var="timetable" value="${timetable+1}"/>
-                            <c:set var="t" value="${timetables.get(timetable)}"/>
-                        </c:if>
+                    <td></td>
+                    <c:forEach var="t" items="${timetables}">
+                        <td><b>${t.day}</b></td>
                     </c:forEach>
-                    <c:set var="timetable" value="0"/>
-                    <c:set var="t" value="${timetables.get(timetable)}"/>
                 </tr>
-                <c:set var="sr" value="${sr+1}"/>
-            </c:forEach>
-        </table>
+                <c:set var="t" value="${timetables.get(timetable)}"/>
+                <c:forEach var="h" items="${hours}">
+                    <tr>
+                        <td>${h}</td>
+                        <c:forEach var="tm" items="${timetables}">
+                            <td bgcolor="${t.specialReservations.get(sr).color}"></td>
+                            <c:if test="${timetable<size}">
+                                <c:set var="timetable" value="${timetable+1}"/>
+                                <c:set var="t" value="${timetables.get(timetable)}"/>
+                            </c:if>
+                        </c:forEach>
+                        <c:set var="timetable" value="0"/>
+                        <c:set var="t" value="${timetables.get(timetable)}"/>
+                    </tr>
+                    <c:set var="sr" value="${sr+1}"/>
+                </c:forEach>
+            </table>
+        </div>
     </div>
 </sec:authorize>
 <sec:authorize access="hasRole('ROLE_ADMIN')">

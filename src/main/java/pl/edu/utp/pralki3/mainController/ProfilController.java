@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.edu.utp.pralki3.entity.Role;
 import pl.edu.utp.pralki3.entity.User;
 import pl.edu.utp.pralki3.model.UserUtilities;
+import pl.edu.utp.pralki3.service.RoleSerivce;
 import pl.edu.utp.pralki3.service.UserService;
 
 import javax.ws.rs.GET;
@@ -17,6 +19,8 @@ import java.util.Locale;
 public class ProfilController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleSerivce roleSerivce;
 
     @GET
     @RequestMapping(value = "/profil")
@@ -25,8 +29,13 @@ public class ProfilController {
         User user = userService.findUserByEmail(username);
         int nrRoli = user.getRoles().iterator().next().getIdRole();
         user.setNrRoli(nrRoli);
+        Role role = roleSerivce.findById(nrRoli);
+        user.setNameOfRole(role.getDescription());
         model.addAttribute("loggedUser", user);
-        return "profil";
+        if (role.getRole().equals("ROLE_USER"))
+            return "profil2";
+        else
+            return "profil";
     }
 
     @GET

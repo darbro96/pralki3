@@ -44,7 +44,7 @@ public class ReservationController {
         model.addAttribute("max", dateTimeToString(max));
         Reservation reservation = new Reservation();
         model.addAttribute("reservation", reservation);
-        return "bookWasher";
+        return "bookWasherForm";
     }
 
     private String dateTimeToString(LocalDateTime dateTime) {

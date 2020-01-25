@@ -46,16 +46,27 @@
         <div class="row justify-content-around">
             <div class="align-self-center p-3">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-secondary font-weight-bold"><i class="fas fa-home"></i> Panel
+                    <button type="button" class="btn btn-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
+                            class="fas fa-home"></i> Panel
                         główny
                     </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"><i
                             class="fas fa-wrench"></i> Zgłoś usterkę
                     </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"><i
-                            class="far fa-registered"></i> Podgląd rezerwacji
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/bookwasher'"><i
+                            class="far fa-registered"></i>
+                        Zarezerwuj
                     </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"><i class="far fa-user"></i>
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/reservations'"><i
+                            class="far fa-registered"></i>
+                        Podgląd rezerwacji
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/profil'"><i
+                            class="far fa-user"></i>
                         Twój profil
                     </button>
                 </div>
@@ -68,67 +79,46 @@
     <div class="container-fluid bg-white border p-5">
         <div class="container">
             <h4 class="text-center">Panel główny</h4>
-
-
-            <%--            <div class="card-group pt-2">--%>
-            <%--                <div class="card bg-light">--%>
-            <%--                    <div class="card-body text-center">--%>
-            <%--                        <p class="card-text">--%>
-            <%--                        <h1><span class="badge badge-success">2</span></h1>--%>
-            <%--                        <h6>Liczba twoich zgłoszeń</h6></p>--%>
-            <%--                    </div>--%>
-            <%--                </div>--%>
-            <%--                <div class="card bg-light">--%>
-            <%--                    <div class="card-body text-center">--%>
-            <%--                        <p class="card-text">--%>
-            <%--                        <h1><span class="badge badge-info">2</span></h1>--%>
-            <%--                        <h6>Liczba twoich rezerwacji</h6></p>--%>
-            <%--                    </div>--%>
-            <%--                </div>--%>
-            <%--                <div class="card bg-light">--%>
-            <%--                    <div class="card-body text-center">--%>
-            <%--                        <p class="card-text">--%>
-            <%--                        <h1><span class="badge badge-warning">2</span></h1>--%>
-            <%--                        <h6>Liczba twoich ostrzerzeń</h6></p>--%>
-            <%--                    </div>--%>
-            <%--                </div>--%>
-            <%--            </div>--%>
-
-
-            <div class="card mt-4">
-                <div class="card-header"><h6>Podgląd twoich aktywnych rezerwacji</h6></div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Nr</th>
-                                <th>Pralka (pralnia)</th>
-                                <th>Rozpoczęcie</th>
-                                <th>Zakończenie</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <c:forEach var="r" items="${reservations}">
-                                <tr>
-                                    <td>${r.idReservation}</td>
-                                    <td>${r.washer.numberWasher} (${r.washer.laundry.numberLaundry})</td>
-                                    <td>${r.start.toString().replace("T"," ")}</td>
-                                    <td>${r.stop.toString().replace("T"," ")}</td>
-                                    <td>
-                                        <button class="btn btn-outline-primary" onclick="window.location.href='${pageContext.request.contextPath}/reservations?cancel=${r.idReservation}'">
-                                            Zrezygnuj
-                                        </button>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="btn-group ml-auto">
+                <c:forEach var="w" items="${washers}">
+                    <button type="button" class="btn btn-primary"
+                            onclick="window.location.href='${pageContext.request.contextPath}/panel?washer=${w.idWasher}'">
+                        Pralka nr <c:out value="${w.numberWasher}"/> (pralnia <c:out
+                            value="${w.laundry.numberLaundry}"/>)
+                    </button>
+                    &nbsp;
+                </c:forEach>
             </div>
-
+            <p><c:out value="${message}"/></p>
+            <c:set var="timetable" value="0"/>
+            <c:set var="sr" value="0"/>
+            <c:set var="size" value="${timetables.size()-1}"/>
+            <div class="table-responsive">
+                <table class="table-bordered w-100 text-center">
+                    <tr>
+                        <td></td>
+                        <c:forEach var="t" items="${timetables}">
+                            <td><b>${t.day.toString().substring(0,5)}</b></td>
+                        </c:forEach>
+                    </tr>
+                    <c:set var="t" value="${timetables.get(timetable)}"/>
+                    <c:forEach var="h" items="${hours}">
+                        <tr>
+                            <td>${h}</td>
+                            <c:forEach var="tm" items="${timetables}">
+                                <td bgcolor="${t.specialReservations.get(sr).color}"></td>
+                                <c:if test="${timetable<size}">
+                                    <c:set var="timetable" value="${timetable+1}"/>
+                                    <c:set var="t" value="${timetables.get(timetable)}"/>
+                                </c:if>
+                            </c:forEach>
+                            <c:set var="timetable" value="0"/>
+                            <c:set var="t" value="${timetables.get(timetable)}"/>
+                        </tr>
+                        <c:set var="sr" value="${sr+1}"/>
+                    </c:forEach>
+                </table>
+            </div>
 
         </div>
 
