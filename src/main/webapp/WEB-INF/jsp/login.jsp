@@ -40,7 +40,7 @@
 
 <div class="container">
     <div class="row align-items-center justify-content-center" style="height: 100vh;">
-        <div class="col-lg-6 col-md-12 align-items-center justify-content-center">
+        <div class="col-lg-6 col-md-12 align-items-center justify-content-center p-3">
             <form class="card p-4 bg-light" id="loginForm" method="post" action="/login">
                 <div class="card-header border-bottom-0 bg-light">
                     <img src="resources/img/logo_header.png" class="img-fluid mx-auto d-block">
