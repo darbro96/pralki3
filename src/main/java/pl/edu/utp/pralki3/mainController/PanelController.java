@@ -41,22 +41,48 @@ public class PanelController {
         String username = UserUtilities.getLoggedUser();
         User user = userService.findUserByEmail(username);
         model.addAttribute("loggedUser", user);
-        if (user.getRoles().iterator().next().getIdRole() == roleSerivce.findByRole("ROLE_user").getIdRole()) {
+        if (user.getRoles().iterator().next().getIdRole() == roleSerivce.findByRole("ROLE_USER").getIdRole()) {
             List<Washer> washers = washerService.getWashersToUser(user);
             model.addAttribute("washers", washers);
-            model.addAttribute("message","Wybierz pralkę");
+            model.addAttribute("message", "Wybierz pralkę");
             if (washer != null) {
                 Washer washerObj = washerService.get(Integer.parseInt(washer));
                 List<Timetable> timetables = prepareTimetable(user, washerObj);
                 model.addAttribute("timetables", timetables);
                 model.addAttribute("hours", generateHours());
-                model.addAttribute("message", "Harmonogram pralki:  "+washerObj.getNumberWasher()+" (pralnia "+washerObj.getLaundry().getNumberLaundry()+")");
+                model.addAttribute("message", "Harmonogram pralki:  " + washerObj.getNumberWasher() + " (pralnia " + washerObj.getLaundry().getNumberLaundry() + ")");
             }
             return "panel_new";
-        }
-        else
-        {
+        } else if (user.getRoles().iterator().next().getIdRole() == roleSerivce.findByRole("ROLE_RECEPTION").getIdRole()) {
+            return "receptionPanel";
+        } else {
             return "administrationPanel";
+        }
+
+    }
+
+    @GET
+    @RequestMapping("/panel2")
+    public String showPanel2(Model model, @RequestParam(required = false) String washer) {
+        String username = UserUtilities.getLoggedUser();
+        User user = userService.findUserByEmail(username);
+        model.addAttribute("loggedUser", user);
+        if (user.getRoles().iterator().next().getIdRole() == roleSerivce.findByRole("ROLE_user").getIdRole()) {
+            List<Washer> washers = washerService.getWashersToUser(user);
+            model.addAttribute("washers", washers);
+            model.addAttribute("message", "Wybierz pralkę");
+            if (washer != null) {
+                Washer washerObj = washerService.get(Integer.parseInt(washer));
+                List<Timetable> timetables = prepareTimetable(user, washerObj);
+                model.addAttribute("timetables", timetables);
+                model.addAttribute("hours", generateHours());
+                model.addAttribute("message", "Harmonogram pralki:  " + washerObj.getNumberWasher() + " (pralnia " + washerObj.getLaundry().getNumberLaundry() + ")");
+            }
+            List<Reservation> reservations = reservationService.findByUserTodayOrLater(user);
+            model.addAttribute("reservations", reservations);
+            return "panel_new2";
+        } else {
+            return "redirect:/panel";
         }
 
     }

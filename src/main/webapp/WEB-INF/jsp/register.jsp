@@ -61,10 +61,6 @@
                         <sf:input path="email" type="text" class="form-control" id="email"/>
                     </div>
                     <div class="form-group">
-                        <label for="password">Hasło:</label>
-                        <sf:input path="password" type="text" class="form-control" id="password"/>
-                    </div>
-                    <div class="form-group">
                         <label for="akademik">Akademik:</label>
                         <sf:select path="nameOfDormitory" class="form-control" id="akademik">
                             <c:forEach var="o" items="${dorms}">
@@ -81,7 +77,7 @@
                         <sf:select path="nameOfRole" id="rola" class="form-control">
                             <sf:option value="NONE" label="--- Wybierz ---"/>
                             <c:forEach var="o" items="${roles}">
-                                <sf:option value="${o.role}" label="${o.role}"/>
+                                <sf:option value="${o.role}" label="${o.description}"/>
                             </c:forEach>
                         </sf:select>
                     </div>

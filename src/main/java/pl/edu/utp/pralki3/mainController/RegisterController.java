@@ -1,7 +1,6 @@
 package pl.edu.utp.pralki3.mainController;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,11 +10,13 @@ import pl.edu.utp.pralki3.entity.Dormitory;
 import pl.edu.utp.pralki3.entity.Role;
 import pl.edu.utp.pralki3.entity.Room;
 import pl.edu.utp.pralki3.entity.User;
+import pl.edu.utp.pralki3.mailSender.MyMailSender;
 import pl.edu.utp.pralki3.model.UserUtilities;
 import pl.edu.utp.pralki3.service.DormitoryService;
 import pl.edu.utp.pralki3.service.RoleSerivce;
 import pl.edu.utp.pralki3.service.RoomService;
 import pl.edu.utp.pralki3.service.UserService;
+import pl.edu.utp.pralki3.utilities.PasswordGenerator;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,6 +35,8 @@ public class RegisterController {
     private RoleSerivce roleSerivce;
     @Autowired
     private RoomService roomService;
+    @Autowired
+    private MyMailSender mailSender;
 
     @GET
     @RequestMapping("/register")
@@ -70,8 +73,13 @@ public class RegisterController {
         if (bindingResult.hasErrors()) {
             returnPage = "register";
         } else {
+            String password = PasswordGenerator.generatePassword();
+            user.setPassword(password);
             userService.saveUser(user);
-            model.addAttribute("message", "user.register.success");
+            String content = "Hasło do serwisu: " + password;
+            String subject = "[noreply] Haslo do serwisu";
+            mailSender.send(user.getEmail(), subject, content);
+            model.addAttribute("message", "Zarejestrowano użytkownika");
             model.addAttribute("user", new User());
             List<Dormitory> dormsList = dormitoryService.findAll();
             model.addAttribute("dorms", dormsList);

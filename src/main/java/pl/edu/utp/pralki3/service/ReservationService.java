@@ -40,6 +40,12 @@ public class ReservationService {
         return reservations;
     }
 
+    public List<Reservation> findTodayOrLater()
+    {
+        List<Reservation> reservations = findAllActive().stream().filter(r -> r.getStop().isAfter(LocalDateTime.now())).collect(Collectors.toList());
+        return reservations;
+    }
+
     public List<Reservation> findByWasher(Washer washer) {
         List<Reservation> reservations = findAllActive();
         reservations = reservations.stream().filter(r -> r.getWasher().getIdWasher() == washer.getIdWasher()).collect(Collectors.toList());

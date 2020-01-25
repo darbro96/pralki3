@@ -27,19 +27,14 @@ import java.util.NoSuchElementException;
 public class AdminPagesController {
     @Autowired
     private UserService userService;
-
     @Autowired
     private DormitoryService dormitoryService;
-
     @Autowired
     private LaundryService laundryService;
-
     @Autowired
     private WasherService washerService;
-
     @Autowired
     private RoleSerivce roleSerivce;
-
     @Autowired
     private RoomService roomService;
 
@@ -549,9 +544,8 @@ public class AdminPagesController {
         model.addAttribute("loggedUser", loggedUser);
         Room room = new Room();
         model.addAttribute("room", room);
-        if(error)
-        {
-            model.addAttribute("message","Nie znaleziono pokoju ze wskazanym identyfikatorem klucza!");
+        if (error) {
+            model.addAttribute("message", "Nie znaleziono pokoju ze wskazanym identyfikatorem klucza!");
         }
         return "roomsFromFloor";
     }

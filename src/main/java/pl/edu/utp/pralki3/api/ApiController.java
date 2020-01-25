@@ -15,6 +15,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -43,6 +44,17 @@ public class ApiController {
     }
 
     @GET
+    @RequestMapping("/reception/users/{dorm}")
+    @Secured(value = {"ROLE_ADMIN", "ROLE_RECEPTION"})
+    public List<User> getAllUsersReception(@PathVariable("dorm") String nameOfDormitory) {
+        List<User> users = userService.findAll();
+        Dormitory dormitory = dormitoryService.findByName(nameOfDormitory);
+        users = users.stream().filter(u -> u.getRoles().iterator().next().getRole().equals("ROLE_USER")).filter(u -> u.getDormitory() != null).filter(u -> u.getDormitory().getIdDormitory() == dormitory.getIdDormitory()).collect(Collectors.toList());
+        users.forEach(u -> u.setPassword(null));
+        return users;
+    }
+
+    @GET
     @RequestMapping("/dorms")
     public List<Dormitory> getAllDorms() {
         return dormitoryService.findAll();
@@ -58,7 +70,8 @@ public class ApiController {
     @GET
     @RequestMapping("/washers/{idLaundry}")
     public List<Washer> getAllWashersFromLaundry(@PathVariable("idLaundry") String idLaundry) {
-        Laundry laundry = laundryService.findAll().stream().filter(l -> l.getIdLaundry() == Integer.parseInt(idLaundry)).findFirst().get();
+        Optional<Laundry> optional = laundryService.findAll().stream().filter(l -> l.getIdLaundry() == Integer.parseInt(idLaundry)).findFirst();
+        Laundry laundry = optional.isPresent() ? optional.get() : null;
         return washerService.getWashersFromLaundry(laundry);
     }
 
@@ -92,13 +105,7 @@ public class ApiController {
         User user = userService.get(idUser);
         userService.updateUserPassword(password, user.getEmail());
         String content = "Hasło do serwisu: " + password;
-        String subject = "[noreply] Hasło do serwisu";
+        String subject = "[noreply] Haslo do serwisu";
         mailSender.send(user.getEmail(), subject, content);
-    }
-
-    @GET
-    @RequestMapping("/test")
-    public String test() {
-        return PasswordGenerator.generatePassword();
     }
 }

@@ -1,0 +1,56 @@
+.bg-kolory {
+    background-image: linear-gradient(to right top, #e1e14b, #d0d34f, #bfc552, #b0b754, #a1a956, #99ac5f, #91ae68, #8ab072, #83c38c, #79d7aa, #6ce9cc, #5ffbf1);
+}
+
+.bg-zolty {
+    background-image: linear-gradient(to right top, #f8f817, #f9e203, #f7cd00, #f3b803, #eda40e, #eba21a, #eaa023, #e89e2a, #edad36, #f2bc43, #f7ca51, #fbd95f);
+}
+
+.bg-niebieski {
+    background-image: linear-gradient(to right top, #17eef8, #00cfe8, #00b0d3, #0091bb, #1374a0, #1a719e, #206e9c, #256b9a, #2581b4, #2198cd, #18b0e6, #00c8ff);
+}
+
+.bg-zolty {
+    background-image: linear-gradient(to right top, #f8f817, #f9e203, #f7cd00, #f3b803, #eda40e, #eba21a, #eaa023, #e89e2a, #edad36, #f2bc43, #f7ca51, #fbd95f);
+}
+
+
+.dialog {
+    width: 100%;
+}
+
+.procent {
+    width: 60%;
+    float: left;
+}
+
+.bg-uniwersytecki {
+    background-color: #800123;
+}
+#pasekLogo{
+    width: 100%;
+    min-height: 4rem;
+}
+#pasekBottom{
+    width: 100%;
+    min-height: 4rem;
+}
+#navbarTlumacz{
+    width: 100%;
+}
+#pasekSzukaj{
+    width: 50%;
+}
+.buttonTlumacz{
+    font-weight: bold;
+    background-color: #800123;
+    text-align: right;
+}
+.buttonTlumacz2{
+    font-weight: bold;
+    background-color: #ffffff;
+}
+
+.tloUtp{
+    background-image: url("img/obrazek.jpg");
+}

@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.logging.Logger;
 
 @Service
 public class MyMailSender {
     @Autowired
     private JavaMailSender javaMailSender;
+
+    private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
     public void send(String to, String subject, String content) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -22,7 +25,7 @@ public class MyMailSender {
             helper.setSubject(subject);
             helper.setText(content, true);
         } catch (MessagingException ex) {
-            ex.printStackTrace();
+            LOGGER.info("Błąd podczas generowaie e-mail!");
         }
         javaMailSender.send(mimeMessage);
     }

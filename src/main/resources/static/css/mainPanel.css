@@ -1,0 +1,16 @@
+#navbar-main{
+    min-height: 4rem;
+    padding-left: 30px;
+}
+#navbar-button{
+    min-height: 4rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1);
+}
+
+.bg-gold{
+    background-color: gold;
+}
+
+.bg-background{
+    background-color: #E0E0E0;
+}
