@@ -111,7 +111,7 @@
                                                                                    min="06:00"
                                                                                    max="21:00" step="1800"
                                                                                    value='{{time}}'
-                                                                                   disabled="true"/><br>
+                                                                                   readonly="true"/><br>
                     <button type="button" class="btn btn-outline-secondary m-0 btn-block" data-toggle="modal"
                             data-target="#myModal">
                         Wybierz godzinę rozpoczęcia rezerwacji
