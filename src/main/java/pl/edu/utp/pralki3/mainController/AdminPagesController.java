@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.edu.utp.pralki3.entity.*;
+import pl.edu.utp.pralki3.mailSender.MyMailSender;
 import pl.edu.utp.pralki3.model.CardToUser;
+import pl.edu.utp.pralki3.model.Timetable;
 import pl.edu.utp.pralki3.model.UserUtilities;
 import pl.edu.utp.pralki3.service.*;
 
@@ -37,8 +39,13 @@ public class AdminPagesController {
     private RoleSerivce roleSerivce;
     @Autowired
     private RoomService roomService;
+    @Autowired
+    private ReservationService reservationService;
+    @Autowired
+    private MyMailSender mailSender;
 
     private static final int ELEMENTS = 10;
+    private static final int TIMETABLE_SIZE = 8;
 
     @GET
     @RequestMapping(value = "/adddormitory")
@@ -548,5 +555,51 @@ public class AdminPagesController {
             model.addAttribute("message", "Nie znaleziono pokoju ze wskazanym identyfikatorem klucza!");
         }
         return "roomsFromFloor";
+    }
+
+    @GET
+    @RequestMapping("/selectwashertoreview")
+    public String selectWasherToReview(Model model) {
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
+        model.addAttribute("timetables", null);
+        return "adminReviewReservations";
+    }
+
+    @GET
+    @RequestMapping("/reviewwasher")
+    public String reviewWasher(Model model, @RequestParam(required = false) String washer) {
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
+        if (washer != null) {
+            Washer washerObj = washerService.get(Integer.parseInt(washer));
+            List<Timetable> timetables = reservationService.prepareTimetable(loggedUser, washerObj, TIMETABLE_SIZE);
+            model.addAttribute("timetables", timetables);
+            model.addAttribute("hours", reservationService.generateHours());
+            model.addAttribute("message", "Harmonogram pralki:  " + washerObj.getNumberWasher() + " (pralnia " + washerObj.getLaundry().getNumberLaundry() + ")");
+        }
+        return "adminReviewReservations";
+    }
+
+    @GET
+    @RequestMapping("/reservationdetails/{idReservation}")
+    public String reservationDetails(Model model, @PathVariable("idReservation") int idReservation) {
+        User loggedUser = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        model.addAttribute("loggedUser", loggedUser);
+        Reservation reservation = reservationService.findById(idReservation);
+        model.addAttribute("reservation", reservation);
+        return "detailsOfReservation";
+    }
+
+    @GET
+    @RequestMapping("/cancelreservation/{id}")
+    public String cancelReservation(@PathVariable("id") int id) {
+        reservationService.deactivateReservation(id);
+        Reservation reservation = reservationService.findById(id);
+        User user = userService.findUserByEmail(UserUtilities.getLoggedUser());
+        String content = "<h3>Twoja rezerwacja została anulowana</h3> przez " + user.getName() + " " + user.getLastName() + " (Administrator) " + "<br><br>Szczegóły anulowanej rezerwacji: <br>Rezerwacja: " + reservation.getIdReservation() + "<br>Pralka (pralnia): " + reservation.getWasher().getNumberWasher() + " (" + reservation.getWasher().getLaundry().getNumberLaundry() + ")<br>Rozpoczęcie: " + reservation.getStart().toString().replace("T", " ") + "<br>Zakończenie: " + reservation.getStop().toString().replace("T", " ");
+        String subject = "[noreply] Anulowanie rezerwacji";
+        mailSender.send(reservation.getUser().getEmail(), subject, content);
+        return "redirect:/reviewwasher?washer=" + reservation.getWasher().getIdWasher();
     }
 }

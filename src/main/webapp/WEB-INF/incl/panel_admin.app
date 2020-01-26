@@ -8,7 +8,7 @@
                 <a class="nav-link" href="/checkin"><s:message code="admin.panel.checkIn" /></a>
                 <a class="nav-link" href="/deleteuser">Usun</a>
                 <br>Pranie
-                <a class="nav-link" href="#">Podglad</a>
+                <a class="nav-link" href="/selectwashertoreview">Podglad</a>
                 <a class="nav-link" href="/managewashers">Zarzadzaj</a>
                 <br>Pokoje
                 <a class="nav-link" href="/roomsByFloor">Zarzadzaj</a>

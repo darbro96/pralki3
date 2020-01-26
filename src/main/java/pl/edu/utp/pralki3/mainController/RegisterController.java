@@ -1,11 +1,15 @@
 package pl.edu.utp.pralki3.mainController;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 import pl.edu.utp.pralki3.entity.Dormitory;
 import pl.edu.utp.pralki3.entity.Role;
 import pl.edu.utp.pralki3.entity.Room;
@@ -20,6 +24,7 @@ import pl.edu.utp.pralki3.utilities.PasswordGenerator;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import java.io.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -54,7 +59,7 @@ public class RegisterController {
 
     @POST
     @RequestMapping(value = "/adduser")
-    public String registerAction(User user, BindingResult bindingResult, Model model, Locale locale) {
+    public String registerAction(User user, BindingResult bindingResult, Model model, Locale locale, @RequestParam(value = "fileupload", required = true) MultipartFile importFile) {
         String returnPage = null;
         User userExist = userService.findUserByEmail(user.getEmail());
         if (userExist != null) {
@@ -70,6 +75,7 @@ public class RegisterController {
         } catch (NoSuchElementException ex) {
             bindingResult.rejectValue("numberOfRoom", "error.room");
         }
+
         if (bindingResult.hasErrors()) {
             returnPage = "register";
         } else {
@@ -85,6 +91,23 @@ public class RegisterController {
             model.addAttribute("dorms", dormsList);
             List<Role> roleList = roleSerivce.findAll();
             model.addAttribute("roles", roleList);
+            user=userService.findUserByEmail(user.getEmail());
+            //wgrywanie pliku
+            try {
+                File uploadDirectory = new File("users_img");
+                uploadDirectory.mkdirs();
+                File oFile = new File(uploadDirectory.getPath() + "/" + user.getIdUser()+".png");
+                OutputStream os = new FileOutputStream(oFile);
+                InputStream inputStream = importFile.getInputStream();
+
+                IOUtils.copy(inputStream, os); // 4
+
+                os.close();
+                inputStream.close();
+            } catch (IOException ex) {
+                System.out.println("\n\n" + ex.toString() + "\n\n");
+            }
+
             returnPage = "register";
         }
         return returnPage;

@@ -82,6 +82,10 @@
                         </sf:select>
                     </div>
                     <div class="form-group">
+                        <label for="imgUsr">Zdjęcie:</label>
+                        <input path="fileName" id="imgUsr" class="form-control" type="file" name="fileupload" />
+                    </div>
+                    <div class="form-group">
                         <input type="submit" value="<s:message code="button.register"/>" class="form-control"/>
                         <input type="button" value="<s:message code="button.cancel"/>" class="form-control"
                                onclick="window.location.href='${pageContext.request.contextPath}/'"/>

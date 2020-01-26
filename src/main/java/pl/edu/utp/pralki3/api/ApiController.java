@@ -108,4 +108,21 @@ public class ApiController {
         String subject = "[noreply] Haslo do serwisu";
         mailSender.send(user.getEmail(), subject, content);
     }
+
+    @GET
+    @RequestMapping("/rooms/{aka}")
+    @Secured(value = {"ROLE_ADMIN", "ROLE_RECEPTION"})
+    public List<Room> rooms(@PathVariable("aka") String dorm) {
+        Dormitory dormitory = dormitoryService.findByName(dorm);
+        return roomService.findAllRoomsFromDormitory(dormitory);
+    }
+
+    @GET
+    @RequestMapping("/usersfromroom/{aka}/{room}")
+    @Secured(value = {"ROLE_ADMIN", "ROLE_RECEPTION"})
+    public List<User> usersFromRoom(@PathVariable("aka") String dorm, @PathVariable("room") String numRoom) {
+        Dormitory dormitory=dormitoryService.findByName(dorm);
+        Room room = roomService.findByNumber(numRoom,dormitory);
+        return userService.getUsersFromRoom(room);
+    }
 }

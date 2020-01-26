@@ -52,8 +52,8 @@
                     <label for="capacity">Pojemność pokoju:</label>
                     <sf:input path="capacity" class="form-control" id="capacity"/>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Dodaj" class="form-control"/>
+                    <div class="form-group">
+                        <input type="submit" value="Dodaj" class="form-control"/>
                     <input type="button" value="<s:message code="button.cancel"/>" class="form-control"
                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"/>
                 </div>

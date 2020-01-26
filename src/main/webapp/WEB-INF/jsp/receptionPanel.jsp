@@ -45,11 +45,15 @@
         <div class="row justify-content-around">
             <div class="align-self-center p-3">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-secondary font-weight-bold" onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i class="fas fa-search"></i>
+                    <button type="button" class="btn btn-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
+                            class="fas fa-search"></i>
                         Wyszukaj mieszkańca
                     </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold" onclick="window.location.href='${pageContext.request.contextPath}/reception/reservations'"><i
-                            class="far fa-calendar-check"></i> Podgląd rezerwacji
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/reception/reservations'">
+                        <i
+                                class="far fa-calendar-check"></i> Podgląd rezerwacji
                     </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"><i
                             class="far fa-registered"></i> Twoja aktywność
@@ -67,7 +71,7 @@
                placeholder="Wpisz imię, nazwisko lub numer pokoju..." ng-model="par" ng-change="search()">
         <br>
 
-        <div class="table-responsive">
+        <div class="table-responsive" ng-show="!showProfil && !showRoom">
             <table class="table table-bordered table-hover table-striped">
                 <thead class="thead-light">
                 <tr>
@@ -88,6 +92,40 @@
             </table>
         </div>
 
+        <div class="container border border-secondary" ng-show="showProfil">
+            <div class="row align-items-center">
+                <div class="col-md-6 p-4">
+                    <img class="card-img-top p-4 mx-auto d-block img-fluid img-rounded"
+                         src="/userimage/{{vUsers[0].idUser}}.png"
+                         alt="Brak zdjęcia">
+                </div>
+                <div class="col-md-6 p-4 text-center">
+                    <h1>{{vUsers[0].name}}</h1>
+                    <h1>{{vUsers[0].lastName}}</h1><br>
+                    <h1>{{vUsers[0].room.number}}</h1>
+                    <%--                    <h1><span class="badge badge-success">Brak powiadomień</span></h1>--%>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row" ng-show="showRoom">
+            <div class="card flex-fill" ng-repeat="r in residents">
+                <img class="card-img-top p-4 mx-auto d-block img-fluid" src="/userimage/{{r.idUser}}.png"
+                     alt="Brak zdjęcia">
+                <div class="card-body">
+                    <h4 class="card-title text-center">{{r.name}} {{r.lastName}}</h4>
+                </div>
+            </div>
+            <%--            <div class="card flex-fill">--%>
+            <%--                <img class="card-img-top p-4 mx-auto d-block img-fluid" src="img_avatar1.png"--%>
+            <%--                     alt="Card image">--%>
+            <%--                <div class="card-body">--%>
+            <%--                    <h4 class="card-title text-center">Tomek Tomczak</h4>--%>
+            <%--                </div>--%>
+            <%--            </div>--%>
+        </div>
+
 
     </div>
 </div>
@@ -106,13 +144,20 @@
 <script>
     angular.module('pralki', []).controller('usersContr', function ($scope, $http, $location) {
         $scope.vUsers = [];
+        $scope.showProfil = false;
+        $scope.rooms = [];
+        $scope.showRoom = false;
         $http.get("/api/reception/users/${loggedUser.dormitory.name}").then(function (value) {
             $scope.users = value.data;
+        });
+        $http.get("/api/rooms/${loggedUser.dormitory.name}").then(function (value) {
+            $scope.rooms = value.data;
         });
 
         $scope.search = function () {
             text = $scope.par;
             $scope.vUsers = [];
+            $scope.residents = [];
             var i;
             var j = 0;
             if (!$scope.par == "") {
@@ -125,9 +170,31 @@
                     if ($scope.users[i].cardId != null) {
                         card = $scope.users[i].cardId;
                     }
-                    if ($scope.users[i].name.toLowerCase().includes($scope.par.toLowerCase()) || $scope.users[i].lastName.toLowerCase().includes($scope.par.toLowerCase()) || nr.toLowerCase().includes($scope.par.toLowerCase()) || card.includes($scope.par)) {
+                    if ($scope.users[i].name.toLowerCase().includes($scope.par.toLowerCase()) || $scope.users[i].lastName.toLowerCase().includes($scope.par.toLowerCase()) || nr.toLowerCase().includes($scope.par.toLowerCase())) {
                         $scope.vUsers[j] = $scope.users[i];
                         j++;
+                    }
+                    if (card === $scope.par) {
+                        $scope.showProfil = true;
+                        $scope.vUsers = [];
+                        $scope.vUsers[0] = $scope.users[i];
+                        break;
+                    } else {
+                        $scope.showProfil = false;
+                        $scope.showRoom = false;
+                    }
+                }
+                if ($scope.vUsers.length == 0) {
+                    $scope.residents = [];
+                    var k = 0;
+                    for (i = 0; i < $scope.rooms.length; i++) {
+                        if ($scope.rooms[i].idCard === $scope.par) {
+                            $http.get("/api/usersfromroom/${loggedUser.dormitory.name}/" + $scope.rooms[i].number).then(function (value) {
+                                $scope.residents = value.data;
+                            });
+                            $scope.showRoom = true;
+                            break;
+                        }
                     }
                 }
             } else {

@@ -67,7 +67,7 @@
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"><i
                             class="fas fa-wrench"></i> Zgłoś usterkę
                     </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                    <button type="button" class="btn btn-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/bookwasher'"><i
                             class="far fa-registered"></i>
                         Zarezerwuj
@@ -77,7 +77,7 @@
                             class="far fa-registered"></i>
                         Podgląd rezerwacji
                     </button>
-                    <button type="button" class="btn btn-secondary font-weight-bold"
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/profil'"><i
                             class="far fa-user"></i>
                         Twój profil

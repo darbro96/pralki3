@@ -43,9 +43,17 @@ public class ProfilController {
     public String editUserPassword(Model model) {
         String username = UserUtilities.getLoggedUser();
         User user = userService.findUserByEmail(username);
+        int nrRoli = user.getRoles().iterator().next().getIdRole();
+        user.setNrRoli(nrRoli);
+        Role role = roleSerivce.findById(nrRoli);
+        user.setNameOfRole(role.getDescription());
+        user.setNameOfRole(role.getDescription());
         model.addAttribute("loggedUser", user);
         model.addAttribute("user", user);
-        return "editpassword";
+        if (role.getRole().equals("ROLE_USER"))
+            return "editpassworduser";
+        else
+            return "editpassword";
     }
 
     @POST

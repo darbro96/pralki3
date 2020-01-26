@@ -2,6 +2,7 @@ package pl.edu.utp.pralki3.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -60,4 +61,6 @@ public class User {
     private String nameOfRole;
     @Transient
     private String numberOfRoom;
+    @Transient
+    private MultipartFile fileName;
 }

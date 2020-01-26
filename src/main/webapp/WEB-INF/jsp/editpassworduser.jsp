@@ -2,6 +2,7 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -77,23 +78,23 @@
 
     <div class="container-fluid bg-white border p-5">
         <div class="container">
-            <h4 class="text-center">Twój profil</h4>
 
             <div class="card mt-4">
-                <div class="card-header"><h6>Twoje dane</h6></div>
+                <div class="card-header"><h6>Zmiana hasła</h6></div>
                 <div class="card-body">
                     <div class="row p-2">
-                        <div class="col-sm-6">
-                            <h5>Imię: ${loggedUser.name}</h5>
-                            <h5>Nazwisko: ${loggedUser.lastName}</h5><br>
-                            <h5>Pokój: ${loggedUser.room.number}</h5>
-                            <h5>Akademik: ${loggedUser.dormitory.name}</h5>
-                            <br>
-                            <h5>Uprawnienia: <span class="badge badge-success">${loggedUser.nameOfRole}</span></h5>
-                        </div>
-                        <div class="col-sm-6">
-                            <button type="button" class="btn btn-outline-info d-flex m-4" onclick="window.location.href='${pageContext.request.contextPath}/editpassword'">Zmień hasło</button>
-                        </div>
+                        <p><c:out value="${message}"/></p>
+                        <sf:form id="usersForm" action="updatepass" modelAttribute="user" enctype="multipart/form-data"
+                                 method="POST">
+                            <sf:hidden path="email"/>
+                            <div id="tresc">
+                                <p>Nowe hasło:&nbsp;&nbsp;<sf:input type="password" path="newPassword" class="form-control"/></p>
+                            </div>
+                            <font color="red"> <sf:errors path="newPassword"/></font>
+                            <input type="submit" value="Zmiana hasła" class="btn btn-outline-primary">
+                            <input class="btn btn-outline-primary" type="button" value="Rezygnacja"
+                                   onclick="window.location.href='${pageContext.request.contextPath}/profil'">
+                        </sf:form>
                     </div>
                 </div>
             </div>
