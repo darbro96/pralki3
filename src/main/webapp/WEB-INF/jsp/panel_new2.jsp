@@ -45,15 +45,10 @@
     <div class="container">
         <div class="row justify-content-around">
             <div class="align-self-center p-3">
-                <div class="btn-group">
+
                     <button type="button" class="btn btn-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
-                            class="fas fa-home"></i> Panel
-                        główny
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/reportfault'"><i
-                            class="fas fa-wrench"></i> Zgłoś usterkę
+                            class="far fa-calendar-check"></i> Harmonogram rezerwacji
                     </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/bookwasher'"><i
@@ -63,37 +58,43 @@
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/reservations'"><i
                             class="far fa-registered"></i>
-                        Podgląd rezerwacji
+                        Twoje rezerwacji
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/reportfault'"><i
+                            class="fas fa-wrench"></i> Zgłoś usterkę
                     </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/profil'"><i
                             class="far fa-user"></i>
                         Twój profil
                     </button>
-                </div>
+
             </div>
         </div>
     </div>
 </div>
-<div class="container-fluid p-5">
+<div class="container-fluid p-sm-0 p-md-5">
 
     <div class="container-fluid bg-white border p-5">
         <div class="container">
-            <h4 class="text-center">Panel główny</h4>
-            <div class="btn-group ml-auto">
+            <h4 class="text-center pb-2">Harmonogram rezerwacji</h4>
+            <div class="container d-flex justify-content-around">
+
                 <c:forEach var="w" items="${washers}">
-                    <button type="button" class="btn btn-primary"
+                    <button type="button" class="btn btn-info m-1"
                             onclick="window.location.href='${pageContext.request.contextPath}/panel?washer=${w.idWasher}'">
                         Pralka nr <c:out value="${w.numberWasher}"/> (pralnia <c:out
                             value="${w.laundry.numberLaundry}"/>)
                     </button>
-                    &nbsp;
                 </c:forEach>
+
             </div>
+            <h6 class="text-center p-2">
             <p><c:out value="${message}"/></p>
             <c:set var="timetable" value="0"/>
             <c:set var="sr" value="0"/>
-            <c:set var="size" value="${timetables.size()-1}"/>
+            <c:set var="size" value="${timetables.size()-1}"/></h6>
             <div class="table-responsive">
                 <table class="table-bordered w-100 text-center">
                     <tr>

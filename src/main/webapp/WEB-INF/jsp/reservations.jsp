@@ -45,42 +45,42 @@
     <div class="container">
         <div class="row justify-content-around">
             <div class="align-self-center p-3">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
-                            class="fas fa-home"></i> Panel główny
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"><i
-                            class="fas fa-wrench"></i> Zgłoś usterkę
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/bookwasher'"><i
-                            class="far fa-registered"></i>
-                        Zarezerwuj
-                    </button>
-                    <button type="button" class="btn btn-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/reservations'">
-                        <i class="far fa-registered"></i> Podgląd rezerwacji
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/profil'"><i
-                            class="far fa-user"></i>
-                        Twój profil
-                    </button>
-                </div>
+                <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                        onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
+                        class="far fa-calendar-check"></i> Harmonogram rezerwacji
+                </button>
+                <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                        onclick="window.location.href='${pageContext.request.contextPath}/bookwasher'"><i
+                        class="far fa-registered"></i>
+                    Zarezerwuj
+                </button>
+                <button type="button" class="btn btn-secondary font-weight-bold"
+                        onclick="window.location.href='${pageContext.request.contextPath}/reservations'"><i
+                        class="far fa-registered"></i>
+                    Twoje rezerwacji
+                </button>
+                <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                        onclick="window.location.href='${pageContext.request.contextPath}/reportfault'"><i
+                        class="fas fa-wrench"></i> Zgłoś usterkę
+                </button>
+                <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                        onclick="window.location.href='${pageContext.request.contextPath}/profil'"><i
+                        class="far fa-user"></i>
+                    Twój profil
+                </button>
             </div>
         </div>
     </div>
 </div>
-<div class="container-fluid p-5">
+<div class="container-fluid p-sm-0 p-md-5">
 
     <div class="container-fluid bg-white border p-5">
         <div class="container">
-            <h4 class="text-center">Podgląd rezerwacji</h4>
+            <h4 class="text-center pb-2">Trwające i przyszłe rezerwacje</h4>
 
-            <div class="card mt-4">
-                <div class="card-header"><h6>Podgląd twoich aktywnych rezerwacji</h6></div>
-                <div class="card-body">
+
+
+
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -110,8 +110,8 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
+
+
 
 
         </div>

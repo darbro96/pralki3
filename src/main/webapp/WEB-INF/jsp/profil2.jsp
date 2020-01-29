@@ -45,35 +45,34 @@
     <div class="container">
         <div class="row justify-content-around">
             <div class="align-self-center p-3">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
-                            class="fas fa-home"></i> Panel główny
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"><i
-                            class="fas fa-wrench"></i> Zgłoś usterkę
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/bookwasher'"><i
-                            class="far fa-registered"></i>
-                        Zarezerwuj
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/reservations'"><i
-                            class="far fa-registered"></i>
-                        Podgląd rezerwacji
-                    </button>
-                    <button type="button" class="btn btn-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/profil'"><i
-                            class="far fa-user"></i>
-                        Twój profil
-                    </button>
-                </div>
+                <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                        onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
+                        class="far fa-calendar-check"></i> Harmonogram rezerwacji
+                </button>
+                <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                        onclick="window.location.href='${pageContext.request.contextPath}/bookwasher'"><i
+                        class="far fa-registered"></i>
+                    Zarezerwuj
+                </button>
+                <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                        onclick="window.location.href='${pageContext.request.contextPath}/reservations'"><i
+                        class="far fa-registered"></i>
+                    Twoje rezerwacji
+                </button>
+                <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                        onclick="window.location.href='${pageContext.request.contextPath}/reportfault'"><i
+                        class="fas fa-wrench"></i> Zgłoś usterkę
+                </button>
+                <button type="button" class="btn btn-secondary font-weight-bold"
+                        onclick="window.location.href='${pageContext.request.contextPath}/profil'"><i
+                        class="far fa-user"></i>
+                    Twój profil
+                </button>
             </div>
         </div>
     </div>
 </div>
-<div class="container-fluid p-5">
+<div class="container-fluid p-sm-0 p-md-5">
 
     <div class="container-fluid bg-white border p-5">
         <div class="container">
@@ -92,6 +91,10 @@
                             <h5>Uprawnienia: <span class="badge badge-success">${loggedUser.nameOfRole}</span></h5>
                         </div>
                         <div class="col-sm-6">
+                            <div class="alert alert-primary alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Wskazówka!</strong> Nie udostępniaj swojego hasła nikomu.
+                            </div>
                             <button type="button" class="btn btn-outline-info d-flex m-4" onclick="window.location.href='${pageContext.request.contextPath}/editpassword'">Zmień hasło</button>
                         </div>
                     </div>

@@ -2,6 +2,7 @@ body{
     background-image: url("/resources/img/obrazek.jpg");
     background-color: #cccccc;
     background-repeat: no-repeat;
+    background-size: cover;
 
 }
 .bg-university{
