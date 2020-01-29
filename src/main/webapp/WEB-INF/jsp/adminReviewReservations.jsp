@@ -63,7 +63,8 @@
                                 <tr>
                                     <td>${h}</td>
                                     <c:forEach var="tm" items="${timetables}">
-                                        <td bgcolor="${t.specialReservations.get(sr).color}" onclick="window.location.href='${pageContext.request.contextPath}/reservationdetails/${t.specialReservations.get(sr).reservation.idReservation}'"></td>
+                                        <td bgcolor="${t.specialReservations.get(sr).color}"
+                                        <c:if test="${t.specialReservations.get(sr).reservation.idReservation!=null}"> onclick="window.location.href='${pageContext.request.contextPath}/reservationdetails/${t.specialReservations.get(sr).reservation.idReservation}'" </c:if></td>
                                         <c:if test="${timetable<size}">
                                             <c:set var="timetable" value="${timetable+1}"/>
                                             <c:set var="t" value="${timetables.get(timetable)}"/>

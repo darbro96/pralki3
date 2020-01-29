@@ -67,16 +67,21 @@
                                         <button ng-click="resetPassword(u.idUser)" class="btn btn-outline-primary">
                                             Resetuj hasło
                                         </button>
+                                        <button ng-click="blockUser(u.idUser)" class="btn btn-outline-primary"
+                                                ng-show="u.active==1">
+                                            Zablokuj
+                                        </button>
+                                        <button ng-click="unblockUser(u.idUser)" class="btn btn-outline-primary"
+                                                ng-hide="u.active==1">
+                                            Odblokuj
+                                        </button>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -136,6 +141,13 @@
             }
         };
 
+        $scope.blockUser=function (id) {
+            window.location.href='${pageContext.request.contextPath}/deactivateuser/'+id;
+        }
+
+        $scope.unblockUser=function (id) {
+            window.location.href='${pageContext.request.contextPath}/activateuser/'+id;
+        }
 
     });
 </script>

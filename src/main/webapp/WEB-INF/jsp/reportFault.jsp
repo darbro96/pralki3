@@ -2,6 +2,7 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -46,13 +47,11 @@
         <div class="row justify-content-around">
             <div class="align-self-center p-3">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
-                            class="fas fa-home"></i> Panel
-                        główny
-                    </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/reportfault'"><i
+                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
+                            class="fas fa-home"></i> Panel główny
+                    </button>
+                    <button type="button" class="btn btn-secondary font-weight-bold"><i
                             class="fas fa-wrench"></i> Zgłoś usterkę
                     </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
@@ -79,50 +78,39 @@
 
     <div class="container-fluid bg-white border p-5">
         <div class="container">
-            <h4 class="text-center">Panel główny</h4>
-            <div class="btn-group ml-auto">
-                <c:forEach var="w" items="${washers}">
-                    <button type="button" class="btn btn-primary"
-                            onclick="window.location.href='${pageContext.request.contextPath}/panel?washer=${w.idWasher}'">
-                        Pralka nr <c:out value="${w.numberWasher}"/> (pralnia <c:out
-                            value="${w.laundry.numberLaundry}"/>)
-                    </button>
-                    &nbsp;
-                </c:forEach>
-            </div>
-            <p><c:out value="${message}"/></p>
-            <c:set var="timetable" value="0"/>
-            <c:set var="sr" value="0"/>
-            <c:set var="size" value="${timetables.size()-1}"/>
-            <div class="table-responsive">
-                <table class="table-bordered w-100 text-center">
-                    <tr>
-                        <td></td>
-                        <c:forEach var="t" items="${timetables}">
-                            <td><b>${t.day.toString().substring(0,5)}</b></td>
-                        </c:forEach>
-                    </tr>
-                    <c:set var="t" value="${timetables.get(timetable)}"/>
-                    <c:forEach var="h" items="${hours}">
-                        <tr>
-                            <td>${h}</td>
-                            <c:forEach var="tm" items="${timetables}">
-                                <td bgcolor="${t.specialReservations.get(sr).color}"></td>
-                                <c:if test="${timetable<size}">
-                                    <c:set var="timetable" value="${timetable+1}"/>
-                                    <c:set var="t" value="${timetables.get(timetable)}"/>
-                                </c:if>
-                            </c:forEach>
-                            <c:set var="timetable" value="0"/>
-                            <c:set var="t" value="${timetables.get(timetable)}"/>
-                        </tr>
-                        <c:set var="sr" value="${sr+1}"/>
-                    </c:forEach>
-                </table>
-            </div>
 
+            <div class="card mt-4">
+                <div class="card-header"><h6>Zgłoś usterkę</h6></div>
+                <div class="card-body">
+                    <div class="row p-2 bg-info">
+                        <c:if test="${message==true}">
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times</button>
+                                <strong>Sukces!</strong> Usterka zgłoszona
+                            </div>
+                        </c:if>
+                        <c:if test="${message==false}">
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times</button>
+                                <strong>Błąd!</strong> Błąd podczas zgłaszania usterki
+                            </div>
+                        </c:if>
+                        <sf:form id="usersForm" action="/reportfaultaction" modelAttribute="fault"
+                                 enctype="multipart/form-data" method="POST">
+                            <div class="form-group bg-green mx-auto">
+                                <label for="lName">Opis usterki:</label>
+                                <sf:textarea path="description"  class="form-control" id="lName"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Zgłoś" class="btn btn-outline-primary">
+                                <input class="btn btn-outline-primary" type="button" value="Rezygnacja"
+                                       onclick="window.location.href='${pageContext.request.contextPath}/panel'">
+                            </div>
+                        </sf:form>
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
 </div>
 </body>

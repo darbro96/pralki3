@@ -94,7 +94,12 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-md-6">
                     <h4 class="text-center">Zarezerwuj</h4>
-
+                    <c:if test="${error!=null}">
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Błąd!</strong> Rezerwacja w wybranym terminie jest niemożliwa. Wybierz inny termin lub pralkę.
+                        </div>
+                    </c:if>
                     <p><font color="red"><sf:errors path="start"/><c:out value="${message }"/></font></p>
 
 

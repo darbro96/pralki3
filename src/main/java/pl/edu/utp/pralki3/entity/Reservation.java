@@ -33,6 +33,8 @@ public class Reservation {
     @Column(name = "active")
     @NotNull
     private boolean active = true;
+    @Column(name = "key_returned")
+    private boolean keyReturned = false;
     @Transient
     private String username;
     @Transient
@@ -43,6 +45,8 @@ public class Reservation {
     private String timeStart;
     @Transient
     private String duration;
+    @Transient
+    private boolean afterTime;
 
     @Override
     public String toString() {

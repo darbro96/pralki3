@@ -2,6 +2,7 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -14,7 +15,7 @@
     <link rel="stylesheet" href="/resources/css/mainPanel.css" type="text/css">
 </head>
 <body class="bg-background" ng-app="pralki" ng-controller="usersContr">
-<nav class="navbar navbar-expand-md bg-dark navbar-dark navbar-main" id="navbar-main">
+<nav class="navbar navbar-expand-md bg-green navbar-dark navbar-main" id="navbar-main">
 
     <a class="navbar-brand font-weight-bold" href="/panel"><i class="fas fa-home"></i> Panel recepcji</a>
 
@@ -55,15 +56,20 @@
                         <i
                                 class="far fa-calendar-check"></i> Podgląd rezerwacji
                     </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"><i
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/reception/activity'"><i
                             class="far fa-registered"></i> Twoja aktywność
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/reception/faults'"><i
+                            class="far fa-registered"></i> Usterki
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="container-fluid p-5">
+<div class="container-fluid p-4">
 
     <div class="container-fluid bg-white border p-5">
         <h3><i class="fas fa-search"></i> Wyszukaj mieszkańca</h3>
@@ -86,23 +92,89 @@
                     <td>{{u.name}}</td>
                     <td>{{u.lastName}}</td>
                     <td>{{u.room.number}}</td>
-                    <td></td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"
+                                ng-click="setUserToModal(u)">
+                            Powiadom
+                        </button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="container border border-secondary" ng-show="showProfil">
+        <!-- The Modal -->
+        <div class="modal fade" id="myModal" role="dialog" ng-keydown="$event.keyode === 13">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <h3 class="text-center pt-4">Wyślij powiadomienie</h3>
+                        <h4 class="text-center">dla {{userToModal.name}} {{userToModal.lastName}}</h4>
+
+                        <div class="d-flex flex-row">
+                            <button type="button" class="btn btn-outline-info btn-lg flex-fill m-2 p-4"
+                                    ng-click="sendNotification(userToModal.idUser,1)">
+                                <h5><i class="far fa-envelope"></i><br>List</h5>
+                            </button>
+                            <button type="button" class="btn btn-outline-info btn-lg flex-fill m-2 p-4"
+                                    ng-click="sendNotification(userToModal.idUser,2)">
+                                <h5><i class="fas fa-box-open"></i><br>Paczka</h5>
+                            </button>
+                            <button type="button" class="btn btn-outline-info btn-lg flex-fill m-2 p-4"
+                                    ng-click="showFormAct()">
+                                <h5><i class="far fa-bell"></i><br>Komunikat</h5>
+                            </button>
+
+                        </div>
+                        <div class="container" ng-show="showForm">
+                            <sf:form id="otherNotification" action="/sendothernotification"
+                                     modelAttribute="notification" enctype="multipart/form-data" method="POST">
+                                <div class="form-group">
+                                    <label for="rola">Treść powiadomienia:</label>
+                                    <sf:textarea path="content" id="rola" class="form-control"/>
+                                    <sf:input path="idUser" ng-model="idUser" readonly="false" class="form-control"
+                                              ng-hide="true"/>
+                                    <input type="submit" value="Wyślij komunikat" class="form-control btn btn-success"/>
+                                </div>
+                            </sf:form>
+                        </div>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-block" data-dismiss="modal"
+                                ng-click="hideForm()">Anuluj
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid border m-0" ng-show="showProfil">
             <div class="row align-items-center">
                 <div class="col-md-6 p-4">
-                    <img class="card-img-top p-4 mx-auto d-block img-fluid img-rounded"
+                    <img class="p-4 mx-auto d-block img-fluid img-rounded"
                          src="/userimage/{{vUsers[0].idUser}}.png"
-                         alt="Brak zdjęcia">
+                         alt="Brak zdjęcia" width="220px">
                 </div>
                 <div class="col-md-6 p-4 text-center">
                     <h1>{{vUsers[0].name}}</h1>
                     <h1>{{vUsers[0].lastName}}</h1><br>
                     <h1>{{vUsers[0].room.number}}</h1>
+                    <div ng-show="vUsers[0].keptKey">
+                        PRZETRZYMUJE KLUCZ DO PRALKI!
+                        <button ng-click="userReturnKey(vUsers[0].idUser)">
+                            ZWROT KLUCZA
+                        </button>
+                    </div>
+                    <div ng-show="vUsers[0].active==0">
+                        ZABLOKOWANE KONTO
+                    </div>
                     <%--                    <h1><span class="badge badge-success">Brak powiadomień</span></h1>--%>
 
                 </div>
@@ -111,10 +183,19 @@
 
         <div class="d-flex flex-row" ng-show="showRoom">
             <div class="card flex-fill" ng-repeat="r in residents">
-                <img class="card-img-top p-4 mx-auto d-block img-fluid" src="/userimage/{{r.idUser}}.png"
-                     alt="Brak zdjęcia">
+                <img class="p-4 mx-auto d-block img-fluid" src="/userimage/{{r.idUser}}.png"
+                     alt="Brak zdjęcia" width="220px">
                 <div class="card-body">
                     <h4 class="card-title text-center">{{r.name}} {{r.lastName}}</h4>
+                    <div ng-show="r.keptKey">
+                        PRZETRZYMUJE KLUCZ!
+                        <button ng-click="userReturnKey(r.idUser)">
+                            ZWROT KLUCZA
+                        </button>
+                    </div>
+                    <div ng-show="r.active==0">
+                        ZABLOKOWANE KONTO
+                    </div>
                 </div>
             </div>
             <%--            <div class="card flex-fill">--%>
@@ -147,6 +228,9 @@
         $scope.showProfil = false;
         $scope.rooms = [];
         $scope.showRoom = false;
+        $scope.userToModal = null;
+        $scope.buttonsDisable = "";
+        $scope.showForm = false;
         $http.get("/api/reception/users/${loggedUser.dormitory.name}").then(function (value) {
             $scope.users = value.data;
         });
@@ -207,9 +291,37 @@
                 console.log("Success", "Mail sent");
             }), function (err) {
                 console.log("Error", err);
-            }
+            };
         };
 
+        $scope.setUserToModal = function (u) {
+            $scope.userToModal = u;
+            $scope.idUser = $scope.userToModal.idUser;
+        };
+
+        $scope.sendNotification = function (u, t) {
+            $scope.buttonsDisable = "disabled";
+            console.log("Sending message... ");
+            $http.post("/api/sendnotification/" + u + "/" + t).then(function (value) {
+                console.log("success", value);
+            }), function (err) {
+                console.log("error", err);
+            };
+            $scope.buttonsDisable = "";
+            $scope.showForm = false;
+        };
+
+        $scope.showFormAct = function () {
+            $scope.showForm = true;
+        };
+
+        $scope.hideForm = function () {
+            $scope.showForm = false;
+        };
+
+        $scope.userReturnKey = function (id) {
+            window.location.href = '${pageContext.request.contextPath}/deletekeyretention/' + id;
+        };
 
     });
 </script>

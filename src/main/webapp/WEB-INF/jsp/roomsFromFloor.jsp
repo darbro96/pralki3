@@ -27,6 +27,13 @@
                 <p>${message}</p>
                 <div class="card">
                     <div class="card-body">
+                        <button type="button" class="btn btn-primary"
+                                onclick="window.location.href='${pageContext.request.contextPath}/addroom'">Dodaj pokój
+                        </button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
                         <div class="form-group">
                             <sf:form id="usersForm" action="searchroombycard" modelAttribute="room"
                                      enctype="multipart/form-data"

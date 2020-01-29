@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md bg-nav navbar-dark bd-navbar fixed-top">
 
-    <a class="navbar-brand" href="/panel"><img src="img/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="logo"> Panel administracji</a>
+    <a class="navbar-brand" href="/panel"><i class="fas fa-home"></i> Panel administracji</a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>

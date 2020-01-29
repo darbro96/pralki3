@@ -52,6 +52,8 @@ public class ProfilController {
         model.addAttribute("user", user);
         if (role.getRole().equals("ROLE_USER"))
             return "editpassworduser";
+        else if (role.getRole().equals("ROLE_RECEPTION"))
+            return "editpasswordreception";
         else
             return "editpassword";
     }

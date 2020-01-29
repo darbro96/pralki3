@@ -2,6 +2,7 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -50,13 +51,12 @@
                             class="fas fa-search"></i>
                         Wyszukaj mieszkańca
                     </button>
-                    <button type="button" class="btn btn-secondary font-weight-bold"
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/reception/reservations'">
                         <i
                                 class="far fa-calendar-check"></i> Podgląd rezerwacji
                     </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/reception/activity'"><i
+                    <button type="button" class="btn btn-secondary font-weight-bold"><i
                             class="far fa-registered"></i> Twoja aktywność
                     </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
@@ -69,64 +69,30 @@
     </div>
 </div>
 <div class="container-fluid p-4">
-
     <div class="container-fluid bg-white border p-5">
-        <h3>Rezerwacje</h3>
-
+        <h3>Twoja aktywność</h3>
+        <button class="btn btn-outline-primary"
+                onclick="window.location.href='${pageContext.request.contextPath}/editpassword'">Zmiana hasła
+        </button>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
                 <thead class="thead-light">
                 <tr>
-                    <th>Pralka (pralnia)</th>
-                    <th>Start</th>
-                    <th>Stop</th>
-                    <th>Osoba</th>
-                    <th></th>
+                    <th>Data i godzina</th>
+                    <th>Akcja</th>
                 </tr>
                 </thead>
                 <tbody id="myTable">
-                <c:forEach var="r" items="${reservations}">
+                <c:forEach items="${logs}" var="l">
                     <tr>
-                        <td>${r.washer.numberWasher} (${r.washer.laundry.numberLaundry})</td>
-                        <td>${r.start.toString().replace("T"," ")}</td>
-                        <td>${r.stop.toString().replace("T"," ")}</td>
-                        <td>${r.user.name} ${r.user.lastName} (${r.user.room.number})</td>
-                        <td>
-                            <c:if test="${r.afterTime==true}">
-                                <button onclick="window.location.href='${pageContext.request.contextPath}/reportuser/${r.user.idUser}'">
-                                    Zgłoś przetrzymanie klucza
-                                </button>
-                            </c:if>
-                            <c:if test="${!r.keyReturned}">
-                                <button onclick="window.location.href='${pageContext.request.contextPath}/returnkey/${r.idReservation}'">
-                                    Oddano klucz
-                                </button>
-                            </c:if>
-                        </td>
+                        <td>${l.dateAndTime.toString().replace("T"," ")}</td>
+                        <td>${l.description}</td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
         </div>
-
-
     </div>
 </div>
-
-
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-<script src="/resources/js/angularjs/1.7.9/angular.min.js"></script>
-<script>
-    angular.module('pralki', []).controller('usersContr', function ($scope, $http, $location) {
-    });
-</script>
 </body>
 </html>

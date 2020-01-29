@@ -2,6 +2,7 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -50,16 +51,15 @@
                             class="fas fa-search"></i>
                         Wyszukaj mieszkańca
                     </button>
-                    <button type="button" class="btn btn-secondary font-weight-bold"
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/reception/reservations'">
                         <i
                                 class="far fa-calendar-check"></i> Podgląd rezerwacji
                     </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/reception/activity'"><i
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"><i
                             class="far fa-registered"></i> Twoja aktywność
                     </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                    <button type="button" class="btn btn-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/reception/faults'"><i
                             class="far fa-registered"></i> Usterki
                     </button>
@@ -69,49 +69,56 @@
     </div>
 </div>
 <div class="container-fluid p-4">
-
     <div class="container-fluid bg-white border p-5">
-        <h3>Rezerwacje</h3>
+        <h3>Usterki zgłoszone przez mieszkańców</h3>
+
+        <c:if test="${message.equals(\"ok\")}">
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Sukces</strong> Usterka usunięta
+            </div>
+
+        </c:if>
+
+        <c:if test="${message.equals(\"error\")}">
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Błąd</strong> Błąd podczas usuwania usterki
+            </div>
+        </c:if>
 
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
                 <thead class="thead-light">
                 <tr>
-                    <th>Pralka (pralnia)</th>
-                    <th>Start</th>
-                    <th>Stop</th>
-                    <th>Osoba</th>
+                    <th>Data i godzina</th>
+                    <th>Opis</th>
+                    <th>Pokój</th>
+                    <th>Osoba zgłaszająca</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody id="myTable">
-                <c:forEach var="r" items="${reservations}">
+                <c:forEach items="${faults}" var="f">
                     <tr>
-                        <td>${r.washer.numberWasher} (${r.washer.laundry.numberLaundry})</td>
-                        <td>${r.start.toString().replace("T"," ")}</td>
-                        <td>${r.stop.toString().replace("T"," ")}</td>
-                        <td>${r.user.name} ${r.user.lastName} (${r.user.room.number})</td>
+                        <td>${f.dateOfNotification.toString().replace("T"," ")}</td>
+                        <td>${f.description}</td>
+                        <td>${f.user.room.number}</td>
+                        <td>${f.user.name} ${f.user.lastName}</td>
                         <td>
-                            <c:if test="${r.afterTime==true}">
-                                <button onclick="window.location.href='${pageContext.request.contextPath}/reportuser/${r.user.idUser}'">
-                                    Zgłoś przetrzymanie klucza
-                                </button>
-                            </c:if>
-                            <c:if test="${!r.keyReturned}">
-                                <button onclick="window.location.href='${pageContext.request.contextPath}/returnkey/${r.idReservation}'">
-                                    Oddano klucz
-                                </button>
-                            </c:if>
+                            <button class="btn btn-outline-primary"
+                                    onclick="window.location.href='${pageContext.request.contextPath}/deletefault/${f.idFault}'">
+                                Zrobione
+                            </button>
                         </td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
         </div>
-
-
     </div>
 </div>
+
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -123,10 +130,5 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-<script src="/resources/js/angularjs/1.7.9/angular.min.js"></script>
-<script>
-    angular.module('pralki', []).controller('usersContr', function ($scope, $http, $location) {
-    });
-</script>
 </body>
 </html>

@@ -15,7 +15,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id")
+        @Column(name = "user_id")
     private int idUser;
     @Column(name = "email")
     @NotNull
@@ -49,6 +49,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "id_room")
     private Room room;
+    @Column(name = "kept_key")
+    private boolean keptKey = false;
     @Transient
     private String operacja;
     @Transient

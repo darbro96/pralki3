@@ -13,10 +13,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 </head>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
-<div class="container-fluid p-0" >
+<div class="container-fluid p-0">
     <div class="row m-0">
         <%@include file="/WEB-INF/incl/panel_admin.app" %>
         <div class="col-sm-10 padm shadow bg-light" id="content">
@@ -25,7 +27,9 @@
 
                 <br>
                 <div class="card">
-                    <div class="card-header"><h5>Osoby z ostrzerzeniem <span class="badge badge-warning"> ! </span></h5></div>
+                    <div class="card-header"><h5>Osoby z zablokowanym kontem <span
+                            class="badge badge-warning"> ! </span></h5>
+                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-striped">
@@ -34,32 +38,42 @@
                                     <th>Imię</th>
                                     <th>Nazwisko</th>
                                     <th>Pokój</th>
+                                    <th>Czy oddano klucz do pralki?</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
-<%--                                <tbody>--%>
-<%--                                <tr>--%>
-<%--                                    <td>Dupa</td>--%>
-<%--                                    <td>Dupa</td>--%>
-<%--                                    <td>512A</td>--%>
-<%--                                </tr>--%>
-<%--                                <tr>--%>
-<%--                                    <td>Maja</td>--%>
-<%--                                    <td>Faja</td>--%>
-<%--                                    <td>420B</td>--%>
-<%--                                </tr>--%>
-<%--                                <tr>--%>
-<%--                                    <td>Helena</td>--%>
-<%--                                    <td>Nowa</td>--%>
-<%--                                    <td>408A</td>--%>
-<%--                                </tr>--%>
-<%--                                </tbody>--%>
+                                <tbody>
+                                <c:forEach var="u" items="${unactiveUsers}">
+                                    <tr>
+                                        <td>${u.name}</td>
+                                        <td>${u.lastName}</td>
+                                        <td>${u.room.number}</td>
+                                        <c:choose>
+                                            <c:when test="${u.keptKey}">
+                                                <td class="text-danger">
+                                                    NIE
+                                                </td>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <td class="text-success">
+                                                    TAK
+                                                </td>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <td>
+                                            <button onclick="window.location.href='${pageContext.request.contextPath}/activateuser/${u.idUser}'"
+                                                    class="btn btn-outline-primary">Odblokuj
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
             </div>
-
 
 
         </div>

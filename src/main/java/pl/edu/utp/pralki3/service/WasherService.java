@@ -24,10 +24,24 @@ public class WasherService {
         return washerRepository.findAll();
     }
 
-    public void saveWasher(Washer washer) {
+    public void saveWasher(Washer washer) throws Exception {
         Laundry laundry = laundryService.get(washer.getIdOfLaundry());
         washer.setLaundry(laundry);
-        washerRepository.save(washer);
+        if (!washerExist(washer)) {
+            washerRepository.save(washer);
+        } else {
+            throw new Exception();
+        }
+    }
+
+    private boolean washerExist(Washer washer) {
+        List<Washer> washers = findAll();
+        for (Washer w : washers) {
+            if (w.getLaundry().getIdLaundry() == washer.getLaundry().getIdLaundry() && w.getNumberWasher().equals(washer.getNumberWasher())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Washer get(int id) {
@@ -36,7 +50,7 @@ public class WasherService {
 
     public List<Washer> getWashersToUser(User user) {
         List<Washer> washers = findAll();
-        washers = washers.stream().filter(w->w.isAvailable()).filter(w -> w.getLaundry().getDormitory().getIdDormitory() == user.getDormitory().getIdDormitory()).collect(Collectors.toList());
+        washers = washers.stream().filter(w -> w.isAvailable()).filter(w -> w.getLaundry().getDormitory().getIdDormitory() == user.getDormitory().getIdDormitory()).collect(Collectors.toList());
         return washers;
     }
 
@@ -52,8 +66,11 @@ public class WasherService {
         washerRepository.setUnavailable(washer.getIdWasher());
     }
 
-    public void updateNumberOfWasher(Washer washer)
-    {
+    public void updateNumberOfWasher(Washer washer) {
         washerRepository.updateNumberOfWasher(washer.getNumberWasher(), washer.getIdWasher());
+    }
+
+    public void deleteWasher(Washer washer) {
+        washerRepository.delete(washer);
     }
 }

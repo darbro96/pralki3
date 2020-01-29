@@ -23,6 +23,7 @@ public class Washer {
     private boolean available;
     @ManyToOne
     @JoinColumn(name = "id_laundry")
+    @NotNull
     private Laundry laundry;
     @Transient
     private int idOfLaundry;

@@ -15,8 +15,8 @@ public class Laundry {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_laundry")
     private int idLaundry;
-    @NotNull
     @Column(name = "number_laundry")
+    @NotNull
     private String numberLaundry;
     @ManyToOne
     @JoinColumn(name = "id_dormitory")

@@ -69,4 +69,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query(value = "UPDATE User u SET u.password= :newPassword WHERE u.email= :email")
     void updatePassword(@Param("newPassword") String password, @Param("email") String email);
+
+    @Modifying
+    @Query(value = "UPDATE User u SET u.keptKey= true WHERE u.email= :email")
+    void setKeyKept( @Param("email") String email);
+
+    @Modifying
+    @Query(value = "UPDATE User u SET u.keptKey= false WHERE u.email= :email")
+    void setNoKeyKept( @Param("email") String email);
 }

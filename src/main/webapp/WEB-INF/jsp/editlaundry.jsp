@@ -22,18 +22,18 @@
         <%@include file="/WEB-INF/incl/panel_admin.app" %>
         <div class="col-sm-9 col-md-10   padm shadow bg-light" id="content">
             <div class="p-1" id="title">
-                <h2>Edycja pralki</h2>
-                <sf:form id="usersForm" action="editwasheraction" modelAttribute="washer" enctype="multipart/form-data"
+                <h2>Edycja pralni</h2>
+                <sf:form id="usersForm" action="editlaundryaction" modelAttribute="laundry" enctype="multipart/form-data"
                          method="POST">
                     <div id="tresc">
                         <div class="form-group">
                             <label for="idWasher">Id:</label>
-                            <sf:input path="idWasher" type="text" class="form-control" id="idWasher" disabled="true"/>
-                            <sf:hidden path="idOfLaundry"/>
+                            <sf:input path="idLaundry" type="text" class="form-control" id="idWasher" disabled="true"/>
+                            <sf:hidden path="nameOfDormitory"/>
                         </div>
                         <div class="form-group">
-                            <label for="numberWasher">Numer pralki:</label>
-                            <sf:input path="numberWasher" type="text" class="form-control" id="numberWasher"/>
+                            <label for="numberWasher">Numer pralni:</label>
+                            <sf:input path="numberLaundry" type="text" class="form-control" id="numberWasher"/>
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Zaktualizuj" class="form-control"/>
