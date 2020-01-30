@@ -78,7 +78,7 @@
     <div class="container-fluid bg-white border p-5">
         <div class="container">
             <div class="row d-flex justify-content-center">
-                <div class="col-sm-6">
+                <div class="col-md-12 col-lg-6">
 
 
             <c:if test="${message==true}">

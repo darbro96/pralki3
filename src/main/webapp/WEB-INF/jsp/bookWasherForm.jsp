@@ -91,7 +91,7 @@
     <div class="container-fluid bg-white border p-5">
         <div class="container">
             <div class="row d-flex justify-content-center">
-                <div class="col-md-6">
+                <div class="col-md-12 col-lg-6">
                     <h4 class="text-center">Zarezerwuj</h4>
                     <c:if test="${error!=null}">
                         <div class="alert alert-danger alert-dismissible">
