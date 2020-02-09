@@ -91,19 +91,20 @@ public class RegisterController {
             model.addAttribute("dorms", dormsList);
             List<Role> roleList = roleSerivce.findAll();
             model.addAttribute("roles", roleList);
-            user=userService.findUserByEmail(user.getEmail());
+            user = userService.findUserByEmail(user.getEmail());
             //wgrywanie pliku
             try {
                 File uploadDirectory = new File("users_img");
                 uploadDirectory.mkdirs();
-                File oFile = new File(uploadDirectory.getPath() + "/" + user.getIdUser()+".png");
-                OutputStream os = new FileOutputStream(oFile);
-                InputStream inputStream = importFile.getInputStream();
+                File oFile = new File(uploadDirectory.getPath() + "/" + user.getIdUser() + ".png");
+                try (OutputStream os = new FileOutputStream(oFile)) {
+                    InputStream inputStream = importFile.getInputStream();
 
-                IOUtils.copy(inputStream, os); // 4
+                    IOUtils.copy(inputStream, os); // 4
 
-                os.close();
-                inputStream.close();
+                    os.close();
+                    inputStream.close();
+                }
             } catch (IOException ex) {
                 System.out.println("\n\n" + ex.toString() + "\n\n");
             }

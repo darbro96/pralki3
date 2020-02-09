@@ -56,9 +56,9 @@ public class ReservationService {
     }
 
     public List<Reservation> findToday() {
-        LocalDateTime tomorrow = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), LocalDateTime.now().getDayOfMonth() + 1, 0, 0);
+        LocalDateTime tomorrow = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), LocalDateTime.now().getDayOfMonth(), 0, 0);
         LocalDateTime today = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), LocalDateTime.now().getDayOfMonth(), 0, 0);
-        List<Reservation> reservations = findAllActive().stream().filter(r -> r.getStop().isAfter(today)).filter(r -> r.getStop().isBefore(tomorrow)).filter(r -> !r.isKeyReturned()).collect(Collectors.toList());
+        List<Reservation> reservations = findAllActive().stream().filter(r -> r.getStop().isAfter(today)).filter(r -> r.getStop().isBefore(tomorrow.plusDays(1))).filter(r -> !r.isKeyReturned()).collect(Collectors.toList());
         for (Reservation r : reservations) {
             if (LocalDateTime.now().isAfter(r.getStop())) {
                 r.setAfterTime(true);
@@ -200,9 +200,8 @@ public class ReservationService {
     }
 
     public void deleteReservationFromWasher(Washer washer) {
-        List<Reservation> reservations=findByWasher(washer);
-        for(Reservation r:reservations)
-        {
+        List<Reservation> reservations = findByWasher(washer);
+        for (Reservation r : reservations) {
             deleteReservation(r);
         }
     }

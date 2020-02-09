@@ -46,11 +46,11 @@
         <div class="row justify-content-around">
             <div class="align-self-center p-3">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-secondary font-weight-bold"
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i class="fas fa-user-check"></i>
                         Weryfikuj
                     </button>
-                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                    <button type="button" class="btn btn-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/reception/search'"><i
                             class="fas fa-search"></i>
                         Wyszukaj
@@ -75,13 +75,36 @@
 <div class="container-fluid p-4">
 
     <div class="container-fluid bg-white border p-5">
-        <h3>Weryfikacja mieszkańca</h3>
+        <h3><i class="fas fa-search"></i> Wyszukaj mieszkańca</h3>
         <input class="form-control form-control-lg mt-4" type="text"
-               placeholder="Przyłóż kartę do czytnika" ng-model="par" ng-change="search()"
-               onblur="this.focus()" autofocus>
+               placeholder="Wpisz imię, nazwisko lub numer pokoju..." ng-model="par" ng-change="search()" autofocus>
         <br>
 
-
+        <div class="table-responsive" ng-show="!showProfil && !showRoom">
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="thead-light">
+                <tr>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
+                    <th>Pokój</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="myTable">
+                <tr data-ng-repeat="u in vUsers">
+                    <td>{{u.name}}</td>
+                    <td>{{u.lastName}}</td>
+                    <td>{{u.room.number}}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"
+                                ng-click="setUserToModal(u)">
+                            Powiadom
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
         <!-- The Modal -->
         <div class="modal fade" id="myModal" role="dialog" ng-keydown="$event.keyode === 13">
@@ -205,7 +228,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-<script src="resources/js/angularjs/1.7.9/angular.min.js"></script>
+<script src="/resources/js/angularjs/1.7.9/angular.min.js"></script>
 <script>
     angular.module('pralki', []).controller('usersContr', function ($scope, $http, $location) {
         $scope.vUsers = [];
@@ -215,7 +238,7 @@
         $scope.userToModal = null;
         $scope.buttonsDisable = "";
         $scope.showForm = false;
-        $scope.sendSuccess = false;
+        $scope.sendSuccess=false;
         $http.get("/api/reception/users/${loggedUser.dormitory.name}").then(function (value) {
             $scope.users = value.data;
         });
@@ -239,15 +262,14 @@
                     if ($scope.users[i].cardId != null) {
                         card = $scope.users[i].cardId;
                     }
-                    // if ($scope.users[i].name.toLowerCase().includes($scope.par.toLowerCase()) || $scope.users[i].lastName.toLowerCase().includes($scope.par.toLowerCase()) || nr.toLowerCase().includes($scope.par.toLowerCase())) {
-                    //     $scope.vUsers[j] = $scope.users[i];
-                    //     j++;
-                    // }
+                    if ($scope.users[i].name.toLowerCase().includes($scope.par.toLowerCase()) || $scope.users[i].lastName.toLowerCase().includes($scope.par.toLowerCase()) || nr.toLowerCase().includes($scope.par.toLowerCase())) {
+                        $scope.vUsers[j] = $scope.users[i];
+                        j++;
+                    }
                     if (card === $scope.par) {
                         $scope.showProfil = true;
                         $scope.vUsers = [];
                         $scope.vUsers[0] = $scope.users[i];
-                        $scope.par = null;
                         break;
                     } else {
                         $scope.showProfil = false;
@@ -263,15 +285,10 @@
                                 $scope.residents = value.data;
                             });
                             $scope.showRoom = true;
-                            $scope.par = null;
                             break;
                         }
                     }
-                    if ($scope.par.length == 10) {
-                        $scope.par = "";
-                    }
                 }
-
             } else {
                 $scope.vUsers = [];
             }
@@ -300,7 +317,7 @@
             };
             $scope.buttonsDisable = "";
             $scope.showForm = false;
-            $scope.sendSuccess = true;
+            $scope.sendSuccess=true;
         };
 
         $scope.showFormAct = function () {

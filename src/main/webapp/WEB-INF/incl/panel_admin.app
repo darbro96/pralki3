@@ -6,11 +6,11 @@
                 <a class="nav-link" href="/register">Dodaj</a>
                 <a class="nav-link" href="/checkout"><s:message code="admin.panel.checkOut" /></a>
                 <a class="nav-link" href="/checkin"><s:message code="admin.panel.checkIn" /></a>
-                <a class="nav-link" href="/deleteuser">Usun</a>
+                <a class="nav-link" href="/deleteuser"><s:message code="admin.panel.delete" /></a>
                 <br>Pranie
-                <a class="nav-link" href="/selectwashertoreview">Podglad</a>
-                <a class="nav-link" href="/managewashers">Zarzadzaj</a>
+                <a class="nav-link" href="/selectwashertoreview"><s:message code="admin.panel.preview" /></a>
+                <a class="nav-link" href="/managewashers"><s:message code="admin.panel.manage" /></a>
                 <br>Pokoje
-                <a class="nav-link" href="/roomsByFloor">Zarzadzaj</a>
+                <a class="nav-link" href="/roomsByFloor"><s:message code="admin.panel.manage" /></a>
             </nav>
         </div>

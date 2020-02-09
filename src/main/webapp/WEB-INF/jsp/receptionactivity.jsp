@@ -47,21 +47,25 @@
             <div class="align-self-center p-3">
                 <div class="btn-group">
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
+                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i class="fas fa-user-check"></i>
+                        Weryfikuj
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/reception/search'"><i
                             class="fas fa-search"></i>
-                        Wyszukaj mieszkańca
+                        Wyszukaj
                     </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/reception/reservations'">
                         <i
-                                class="far fa-calendar-check"></i> Podgląd rezerwacji
-                    </button>
-                    <button type="button" class="btn btn-secondary font-weight-bold"><i
-                            class="far fa-registered"></i> Twoja aktywność
+                                class="far fa-calendar-check"></i> Rezerwacje
                     </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
                             onclick="window.location.href='${pageContext.request.contextPath}/reception/faults'"><i
                             class="far fa-registered"></i> Usterki
+                    </button>
+                    <button type="button" class="btn btn-secondary font-weight-bold"
+                            onclick="window.location.href='${pageContext.request.contextPath}/reception/activity'"><i class="fas fa-user-cog"></i> Profil
                     </button>
                 </div>
             </div>

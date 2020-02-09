@@ -1,5 +1,6 @@
 package pl.edu.utp.pralki3.mainController;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -120,4 +121,17 @@ public class ReceptionPagesController {
             return "redirect:/reception/faults?execute=error";
         }
     }
+
+    @GET
+    @RequestMapping("/reception/search")
+    public String testSearch(Model model)
+    {
+        String username = UserUtilities.getLoggedUser();
+        User user = userService.findUserByEmail(username);
+        model.addAttribute("loggedUser", user);
+        model.addAttribute("notification", new Notification());
+        return "search";
+    }
+
+
 }

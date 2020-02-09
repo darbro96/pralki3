@@ -15,7 +15,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-        @Column(name = "user_id")
+    @Column(name = "user_id")
     private int idUser;
     @Column(name = "email")
     @NotNull

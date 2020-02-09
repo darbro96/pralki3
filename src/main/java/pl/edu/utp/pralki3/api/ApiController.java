@@ -17,7 +17,6 @@ import javax.ws.rs.POST;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @RestController
@@ -135,7 +134,7 @@ public class ApiController {
     @Secured(value = {"ROLE_ADMIN", "ROLE_RECEPTION"})
     public void sendNotification(@PathVariable("idUser") int idUser, @PathVariable("type") int type) throws Exception {
         User user = userService.get(idUser);
-        String notification = "<h2>Powiadomienie z recepcji DS</h2> <br> W recepcji list lub paczka oczekuje na odbiór ";
+        String notification = "<h2>Powiadomienie z recepcji DS</h2> <br> W recepcji oczekuje na odbiór ";
         switch (type) {
             case 1:
                 notification += "list";
