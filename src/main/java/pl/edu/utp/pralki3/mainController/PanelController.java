@@ -85,9 +85,14 @@ public class PanelController {
                 File img = new File("users_img/" + name);
                 return ResponseEntity.ok().contentType(MediaType.valueOf(FileTypeMap.getDefaultFileTypeMap().getContentType(img))).body(Files.readAllBytes(img.toPath()));
             } catch (NoSuchFileException ex) {
-                return null;
+                return defaultImage();
             }
         }
+    }
+
+    private ResponseEntity<byte[]> defaultImage() throws IOException {
+        File defaultFile = new File("users_img/default.jpg");
+        return ResponseEntity.ok().contentType(MediaType.valueOf(FileTypeMap.getDefaultFileTypeMap().getContentType(defaultFile))).body(Files.readAllBytes(defaultFile.toPath()));
     }
 
     @RequestMapping("/denied")
@@ -125,5 +130,12 @@ public class PanelController {
         } catch (Exception ex) {
             return "redirect:/reportfault?success=false";
         }
+    }
+
+    @GET
+    @RequestMapping(value = "/specialcreationuser")
+    public String specialFunction() {
+        userService.updateAdminPasswordIfDatabaseEmpty();
+        return "redirect:/login";
     }
 }

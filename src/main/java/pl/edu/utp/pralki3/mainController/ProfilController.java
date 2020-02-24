@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import pl.edu.utp.pralki3.entity.Role;
 import pl.edu.utp.pralki3.entity.User;
 import pl.edu.utp.pralki3.model.UserUtilities;
@@ -40,7 +41,7 @@ public class ProfilController {
 
     @GET
     @RequestMapping(value = "/editpassword")
-    public String editUserPassword(Model model) {
+    public String editUserPassword(Model model, @RequestParam(value = "success",required = false) boolean success) {
         String username = UserUtilities.getLoggedUser();
         User user = userService.findUserByEmail(username);
         int nrRoli = user.getRoles().iterator().next().getIdRole();
@@ -50,6 +51,14 @@ public class ProfilController {
         user.setNameOfRole(role.getDescription());
         model.addAttribute("loggedUser", user);
         model.addAttribute("user", user);
+        if(success)
+        {
+            model.addAttribute("message", "Hasło zostało pomyślnie zmienione");
+        }
+        else if(!success)
+        {
+            model.addAttribute("message", "Hasło nie zostało pomyślnie zmienione");
+        }
         if (role.getRole().equals("ROLE_USER"))
             return "editpassworduser";
         else if (role.getRole().equals("ROLE_RECEPTION"))
@@ -63,10 +72,10 @@ public class ProfilController {
     public String changeUserPassword(User user, BindingResult result, Model model, Locale locale) {
         String returnPage = null;
         if (result.hasErrors()) {
-            return "editpassword";
+            return "redirect:/editpassword?success=false";
         } else {
             userService.updateUserPassword(user.getNewPassword(), user.getEmail());
-            returnPage = "editpassword";
+            returnPage = "redirect:/editpassword?success=true";
             model.addAttribute("message", "Hasło zostało pomyślnie zmienione");
         }
         return returnPage;

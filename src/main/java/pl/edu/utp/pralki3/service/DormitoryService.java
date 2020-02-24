@@ -28,4 +28,9 @@ public class DormitoryService {
     {
         return dormitoryRepository.findAll();
     }
+
+    public int amountOfDormitories()
+    {
+        return dormitoryRepository.findAll().size();
+    }
 }

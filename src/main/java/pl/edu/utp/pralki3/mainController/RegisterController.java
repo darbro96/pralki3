@@ -1,6 +1,7 @@
 package pl.edu.utp.pralki3.mainController;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.hibernate.dialect.DataDirectOracle9Dialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import pl.edu.utp.pralki3.service.RoomService;
 import pl.edu.utp.pralki3.service.UserService;
 import pl.edu.utp.pralki3.utilities.PasswordGenerator;
 
+import javax.annotation.PostConstruct;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import java.io.*;
@@ -100,7 +102,7 @@ public class RegisterController {
                 try (OutputStream os = new FileOutputStream(oFile)) {
                     InputStream inputStream = importFile.getInputStream();
 
-                    IOUtils.copy(inputStream, os); // 4
+                    IOUtils.copy(inputStream, os);
 
                     os.close();
                     inputStream.close();

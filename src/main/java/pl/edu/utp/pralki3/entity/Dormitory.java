@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -15,5 +16,6 @@ public class Dormitory {
     @Column(name = "id_dormitory")
     private int idDormitory;
     @Column(name = "name")
+    @NotNull
     private String name;
 }

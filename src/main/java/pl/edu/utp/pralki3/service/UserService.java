@@ -5,15 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.edu.utp.pralki3.entity.Reservation;
-import pl.edu.utp.pralki3.entity.Role;
-import pl.edu.utp.pralki3.entity.Room;
-import pl.edu.utp.pralki3.entity.User;
+import pl.edu.utp.pralki3.entity.*;
 import pl.edu.utp.pralki3.mailSender.MyMailSender;
 import pl.edu.utp.pralki3.model.UserUtilities;
 import pl.edu.utp.pralki3.repository.RoleRepository;
 import pl.edu.utp.pralki3.repository.UserRepository;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,9 +50,12 @@ public class UserService {
         user.setNrRoli(role.getIdRole());
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         user.setDormitory(dormitoryService.findByName(user.getNameOfDormitory()));
-        user.setRoom(roomService.findByNumber(user.getNumberOfRoom(), user.getDormitory()));
+        user.setKeptKey(false);
+        if (user.getNumberOfRoom() != null)
+            user.setRoom(roomService.findByNumber(user.getNumberOfRoom(), user.getDormitory()));
         userRepository.save(user);
-        logService.saveLog(findUserByEmail(UserUtilities.getLoggedUser()), "Utworzono użytkownika id: " + findUserByEmail(user.getEmail()).getIdUser());
+        if (UserUtilities.getLoggedUser() != null)
+            logService.saveLog(findUserByEmail(UserUtilities.getLoggedUser()), "Utworzono użytkownika id: " + findUserByEmail(user.getEmail()).getIdUser());
     }
 
     public void updateUserPassword(String newPassword, String email) {
@@ -114,7 +115,7 @@ public class UserService {
         String subject = "Odblokowano konto";
         String content = "Twoje konto zostało odblokowane.";
         mailSender.send(user.getEmail(), subject, content);
-        logService.saveLog(findUserByEmail(UserUtilities.getLoggedUser()),"Aktywowano konto użytkownika id: "+user.getIdUser());
+        logService.saveLog(findUserByEmail(UserUtilities.getLoggedUser()), "Aktywowano konto użytkownika id: " + user.getIdUser());
     }
 
     public void deactivateUser(User user) {
@@ -122,7 +123,7 @@ public class UserService {
         String subject = "Blokada konta";
         String content = "Twoje konto zostało zablokowane. Logowanie do serwisu jest niemożliwe. W celu odzyskania dostępu skontaktuj się z administracją.";
         mailSender.send(user.getEmail(), subject, content);
-        logService.saveLog(findUserByEmail(UserUtilities.getLoggedUser()),"Dezktywowano konto użytkownika id: "+user.getIdUser());
+        logService.saveLog(findUserByEmail(UserUtilities.getLoggedUser()), "Dezktywowano konto użytkownika id: " + user.getIdUser());
     }
 
     public void updateCardId(User user) {
@@ -159,7 +160,7 @@ public class UserService {
 
     public void checkIn(User user, Room room) {
         userRepository.updateRoom(room.getIdRoom(), user.getEmail());
-        logService.saveLog(findUserByEmail(UserUtilities.getLoggedUser()),"Zakwaterowano użytkownika id: "+user.getIdUser()+" do pokoju "+room.getNumber());
+        logService.saveLog(findUserByEmail(UserUtilities.getLoggedUser()), "Zakwaterowano użytkownika id: " + user.getIdUser() + " do pokoju " + room.getNumber());
     }
 
     public void reportKeyRetention(User user) {
@@ -181,6 +182,25 @@ public class UserService {
 
     public void deleteKeyRetention(User user) {
         userRepository.setNoKeyKept(user.getEmail());
-        logService.saveLog(findUserByEmail(UserUtilities.getLoggedUser()),"Odebrano zaległy klucz od pralki od użytkownika użytkownika id: "+user.getIdUser());
+        logService.saveLog(findUserByEmail(UserUtilities.getLoggedUser()), "Odebrano zaległy klucz od pralki od użytkownika użytkownika id: " + user.getIdUser());
+    }
+
+    public int getAmountOfUsers() {
+        return userRepository.findAll().size();
+    }
+
+    public void updateAdminPasswordIfDatabaseEmpty() {
+        if (getAmountOfUsers() == 0) {
+            User user = new User();
+            user.setName("Admin");
+            user.setLastName("Admin");
+            user.setEmail("admin@mail.com");
+            user.setSex("M");
+            user.setNationality("PL");
+            user.setKeptKey(false);
+            user.setNameOfRole("ROLE_ADMIN");
+            user.setPassword("haslo123");
+            saveUser(user);
+        }
     }
 }

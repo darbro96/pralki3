@@ -47,7 +47,8 @@
             <div class="align-self-center p-3">
                 <div class="btn-group">
                     <button type="button" class="btn btn-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i class="fas fa-user-check"></i>
+                            onclick="window.location.href='${pageContext.request.contextPath}/panel'"><i
+                            class="fas fa-user-check"></i>
                         Weryfikuj
                     </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
@@ -65,7 +66,8 @@
                             class="far fa-registered"></i> Usterki
                     </button>
                     <button type="button" class="btn btn-outline-secondary font-weight-bold"
-                            onclick="window.location.href='${pageContext.request.contextPath}/reception/activity'"><i class="fas fa-user-cog"></i> Profil
+                            onclick="window.location.href='${pageContext.request.contextPath}/reception/activity'"><i
+                            class="fas fa-user-cog"></i> Profil
                     </button>
                 </div>
             </div>
@@ -77,10 +79,13 @@
     <div class="container-fluid bg-white border p-5">
         <h3>Weryfikacja mieszkańca</h3>
         <input class="form-control form-control-lg mt-4" type="text"
-               placeholder="Przyłóż kartę do czytnika" ng-model="par" ng-change="search()"
-               onblur="this.focus()" autofocus>
+               placeholder="Przyłóż kartę do czytnika" ng-model="par" ng-change="search()" ng-keydown="$event.keyCode === 13 && clearIn()"
+               onblur="this.focus()" autofocus id="werInput">
         <br>
 
+        <div class="alert alert-danger alert-dismissible" ng-show="noResults">
+            <strong>Błąd</strong> Nie naleziono osoby ani pokoju o wskazanym identyfikatorze
+        </div>
 
 
         <!-- The Modal -->
@@ -140,7 +145,7 @@
         </div>
 
         <div class="container-fluid border m-0" ng-show="showProfil">
-            <div class="row align-items-center">
+            <div class="row align-items-center {{nameOfClass}}">
                 <div class="col-md-6 p-4">
                     <img class="p-4 mx-auto d-block img-fluid img-rounded"
                          src="/userimage/{{vUsers[0].idUser}}.png"
@@ -151,8 +156,8 @@
                     <h1>{{vUsers[0].lastName}}</h1><br>
                     <h1>{{vUsers[0].room.number}}</h1>
                     <div ng-show="vUsers[0].keptKey">
-                        PRZETRZYMUJE KLUCZ DO PRALKI!
-                        <button ng-click="userReturnKey(vUsers[0].idUser)">
+                        <h4 class="text-light">PRZETRZYMUJE KLUCZ DO PRALKI!</h4>
+                        <button class="btn btn-success" ng-click="userReturnKey(vUsers[0].idUser)">
                             ZWROT KLUCZA
                         </button>
                     </div>
@@ -166,7 +171,7 @@
         </div>
 
         <div class="d-flex flex-row" ng-show="showRoom">
-            <div class="card flex-fill" ng-repeat="r in residents">
+            <div class="card flex-fill {{r.keptKey?'bg-danger':''}}" ng-repeat="r in residents">
                 <img class="p-4 mx-auto d-block img-fluid" src="/userimage/{{r.idUser}}.png"
                      alt="Brak zdjęcia" width="220px">
                 <div class="card-body">
@@ -216,6 +221,8 @@
         $scope.buttonsDisable = "";
         $scope.showForm = false;
         $scope.sendSuccess = false;
+        $scope.noResults = false;
+        $scope.nameOfClass='';
         $http.get("/api/reception/users/${loggedUser.dormitory.name}").then(function (value) {
             $scope.users = value.data;
         });
@@ -248,6 +255,15 @@
                         $scope.vUsers = [];
                         $scope.vUsers[0] = $scope.users[i];
                         $scope.par = null;
+                        $scope.noResults = false;
+                        if($scope.vUsers[0].keptKey)
+                        {
+                            $scope.nameOfClass="bg-danger";
+                        }
+                        else
+                        {
+                            $scope.nameOfClass='';
+                        }
                         break;
                     } else {
                         $scope.showProfil = false;
@@ -256,7 +272,6 @@
                 }
                 if ($scope.vUsers.length == 0) {
                     $scope.residents = [];
-                    var k = 0;
                     for (i = 0; i < $scope.rooms.length; i++) {
                         if ($scope.rooms[i].idCard === $scope.par) {
                             $http.get("/api/usersfromroom/${loggedUser.dormitory.name}/" + $scope.rooms[i].number).then(function (value) {
@@ -264,11 +279,13 @@
                             });
                             $scope.showRoom = true;
                             $scope.par = null;
+                            $scope.noResults = false;
                             break;
                         }
                     }
-                    if ($scope.par.length == 10) {
+                    if ($scope.par.length >= 10) {
                         $scope.par = "";
+                        $scope.noResults = true;
                     }
                 }
 
@@ -313,6 +330,10 @@
 
         $scope.userReturnKey = function (id) {
             window.location.href = '${pageContext.request.contextPath}/deletekeyretention/' + id;
+        };
+
+        $scope.clearIn=function () {
+            $scope.par = '';
         };
 
     });

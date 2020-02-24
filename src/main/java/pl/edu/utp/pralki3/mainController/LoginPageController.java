@@ -13,11 +13,4 @@ public class LoginPageController {
     {
         return "login";
     }
-
-    @GET
-    @RequestMapping(value = "/karol")
-    public String karol()
-    {
-        return "userPanel";
-    }
 }

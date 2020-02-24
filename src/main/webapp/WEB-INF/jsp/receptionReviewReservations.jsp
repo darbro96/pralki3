@@ -101,7 +101,7 @@
                                 </button>
                             </c:if>
                             <c:if test="${!r.keyReturned}">
-                                <button onclick="window.location.href='${pageContext.request.contextPath}/returnkey/${r.idReservation}'">
+                                <button class="btn btn-success" onclick="window.location.href='${pageContext.request.contextPath}/returnkey/${r.idReservation}'">
                                     Oddano klucz
                                 </button>
                             </c:if>
